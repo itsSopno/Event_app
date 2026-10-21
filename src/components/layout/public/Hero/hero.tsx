@@ -2,45 +2,80 @@
 
 import "./hero.css";
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-
+import image from './hero.jpg'
 gsap.registerPlugin(useGSAP);
 
-const CATEGORIES = ["Hackathon", "Workshop", "Meetup", "Contest", "Bootcamp", "Webinar"];
+const BRAND = "Sinners_Code";
 
-const ROSTER = [
-  { role: "Mentor", filled: 7, total: 8 },
-  { role: "Judge", filled: 3, total: 4 },
-  { role: "Speaker", filled: 2, total: 2 },
-  { role: "Tech support", filled: 5, total: 6 },
+const TECH = [
+  { name: "Next.js", mark: "N" },
+  { name: "React", mark: "R" },
+  { name: "TypeScript", mark: "TS" },
+  { name: "Node.js", mark: "No" },
+  { name: "MongoDB", mark: "Mo" },
+  { name: "Tailwind CSS", mark: "Tw" },
+  { name: "GitHub", mark: "Gh" },
+  { name: "Vercel", mark: "V" },
+  { name: "Docker", mark: "Do" },
+  { name: "Python", mark: "Py" },
 ];
 
-const STATS = [
-  { value: 1280, suffix: "+", label: "Volunteers joined" },
-  { value: 86, suffix: "", label: "Events hosted" },
-  { value: 6, suffix: "", label: "Cities covered" },
-  { value: 42, suffix: "", label: "Open volunteer slots" },
+const CODE: { t: string; c?: string }[][] = [
+  [{ t: "const ", c: "k" }, { t: "event", c: "v" }, { t: " = {" }],
+  [{ t: "  title: " }, { t: '"Dhaka Hackathon"', c: "s" }, { t: "," }],
+  [{ t: "  roles: [" }, { t: '"Mentor"', c: "s" }, { t: ", " }, { t: '"Judge"', c: "s" }, { t: "]," }],
+  [{ t: "  slots: " }, { t: "12", c: "n" }, { t: "," }],
+  [{ t: "};" }],
+  [],
+  [{ t: "volunteer", c: "v" }, { t: ".join(event);" }],
 ];
 
-const filled = ROSTER.reduce((s, r) => s + r.filled, 0);
-const capacity = ROSTER.reduce((s, r) => s + r.total, 0);
+// Put your photo in /public/images/featured-event.jpg (portrait, about 540x680 or bigger).
+const FEATURED = {
+  image: "/images/featured-event.jpg",
+  alt: "hero image",
+  caption: "A   good programmer has a lot of projects",
+  slots: "127.0.0.1",
+};
+
+const VLINES = [0, 20, 60, 80, 100];
+
+function Arrow() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
+
+function Bolt() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />
+    </svg>
+  );
+}
+
+function TechGroup({ hidden }: { hidden?: boolean }) {
+  return (
+    <ul className="hero__group" aria-hidden={hidden}>
+      {TECH.map((t) => (
+        <li key={t.name} className="hero__tech">
+          <span className="hero__tech-mark">{t.mark}</span>
+          {t.name}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function Hero() {
-  const router = useRouter();
   const root = useRef<HTMLElement>(null);
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
-
-  function handleSearch(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (query.trim()) params.set("search", query.trim());
-    if (category) params.set("category", category);
-    router.push(`/events?${params.toString()}`);
-  }
+  const [imgFailed, setImgFailed] = useState(false);
 
   useGSAP(
     () => {
@@ -49,29 +84,19 @@ export default function Hero() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-        tl.from(".hero__status", { y: 10, opacity: 0, duration: 0.5 })
-          .from(".hero__line-inner", { yPercent: 105, duration: 0.85, stagger: 0.1, ease: "power4.out" }, "-=0.2")
+        tl.from(".hero__label", { y: 10, opacity: 0, duration: 0.5 })
+          .from(".hero__line-inner", { yPercent: 105, duration: 0.9, stagger: 0.1, ease: "power4.out" }, "-=0.2")
           .from(".hero__sub", { y: 14, opacity: 0, duration: 0.5 }, "-=0.45")
-          .from(".hero__search", { y: 14, opacity: 0, duration: 0.5 }, "-=0.35")
-          .from(".hero__quick, .hero__cta", { y: 10, opacity: 0, stagger: 0.08, duration: 0.45 }, "-=0.3")
-          .from(".hero__card-wrap", { y: 28, opacity: 0, duration: 0.9, ease: "expo.out" }, 0.35)
-          .from(".hero__row", { y: 8, opacity: 0, stagger: 0.07, duration: 0.45 }, "-=0.5")
-          .from(".hero__bar", { scaleX: 0, duration: 0.9, stagger: 0.07, ease: "power3.inOut" }, "-=0.5")
-          .from(".hero__stats", { opacity: 0, y: 12, duration: 0.6 }, "-=0.6");
+          .from(".hero__cta", { y: 12, opacity: 0, duration: 0.5 }, "-=0.35")
+          .from(".hero__feature", { y: 28, opacity: 0, duration: 0.9, ease: "expo.out" }, 0.45)
+          .from(".hero__trust", { opacity: 0, y: 10, duration: 0.6 }, "-=0.5");
 
-        gsap.utils.toArray<HTMLElement>("[data-count]").forEach((el) => {
-          const target = Number(el.dataset.count);
-          const suffix = el.dataset.suffix ?? "";
-          const obj = { v: 0 };
-          gsap.to(obj, {
-            v: target,
-            duration: 1.5,
-            delay: 0.9,
-            ease: "power2.out",
-            onUpdate: () => {
-              el.textContent = Math.round(obj.v).toLocaleString() + suffix;
-            },
-          });
+        gsap.to(".hero__gear svg", {
+          rotation: 360,
+          duration: 70,
+          ease: "none",
+          repeat: -1,
+          transformOrigin: "50% 50%",
         });
       });
 
@@ -82,164 +107,108 @@ export default function Hero() {
 
   return (
     <section ref={root} className="hero">
-      <div className="hero__grid-bg" aria-hidden />
-
-      <div className="hero__container">
-        {/* Copy */}
-        <div className="hero__copy">
-          <span className="hero__status">
-            <span className="hero__dot" aria-hidden />
-            Volunteer registrations are open
-          </span>
-
-          <h1 className="hero__title">
-            <span className="hero__line">
-              <span className="hero__line-inner">Where developers</span>
-            </span>
-            <span className="hero__line">
-              <span className="hero__line-inner">give back.</span>
-            </span>
-          </h1>
-
-          <p className="hero__sub">
-            Find mentor, judge and speaker roles at hackathons, workshops and meetups, or
-            host your own event and manage every volunteer in one place.
-          </p>
-
-          <form onSubmit={handleSearch} className="hero__search" role="search">
-            <label className="hero__field">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-3.5-3.5" />
-              </svg>
-              <input
-                className="hero__input"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search events by title"
-                aria-label="Search events by title"
-              />
-            </label>
-
-            <label className="hero__select-wrap">
-              <select
-                className="hero__select"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                aria-label="Category"
-              >
-                <option value="">All categories</option>
-                {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-              <svg className="hero__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </label>
-
-            <button type="submit" className="hero__btn">Search events</button>
-          </form>
-
-          <div className="hero__quick">
-            <span>Popular:</span>
-            {["Hackathon", "Workshop", "Meetup"].map((c) => (
-              <Link key={c} href={`/events?category=${c}`} className="hero__tag">
-                {c}
-              </Link>
-            ))}
-          </div>
-
-          <div className="hero__cta">
-            <Link href="/register?role=volunteer" className="hero__cta-main">
-              Become a volunteer
-            </Link>
-            <Link href="/register?role=organizer" className="hero__cta-alt">
-              Host an event
-            </Link>
-          </div>
-        </div>
-
-        {/* Roster card */}
-        <div className="hero__visual">
-          <div className="hero__card-wrap">
-            <article className="hero__card">
-              <header className="hero__card-head">
-                <div className="hero__card-top">
-                  <span className="hero__chip">Hackathon</span>
-                  <span className="hero__open">
-                    <span className="hero__dot" aria-hidden />
-                    Open
-                  </span>
-                </div>
-                <h2 className="hero__card-title">Dhaka Hackathon 2026</h2>
-                <div className="hero__meta">
-                  <span>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                      <rect x="3" y="5" width="18" height="16" rx="2" />
-                      <path d="M16 3v4M8 3v4M3 11h18" />
-                    </svg>
-                    12 Nov 2026
-                  </span>
-                  <span>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                      <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" />
-                      <circle cx="12" cy="10" r="2.5" />
-                    </svg>
-                    Dhaka
-                  </span>
-                </div>
-              </header>
-
-              <div className="hero__rows">
-                {ROSTER.map(({ role, filled: f, total }) => {
-                  const isFull = f === total;
-                  return (
-                    <div key={role} className="hero__row">
-                      <div className="hero__row-top">
-                        <span className="hero__row-name">{role}</span>
-                        <span className="hero__row-count">
-                          {isFull && <span className="hero__full">Full</span>}
-                          {f} of {total}
-                        </span>
-                      </div>
-                      <div className="hero__track" aria-hidden>
-                        <div
-                          className={`hero__bar${isFull ? " hero__bar--full" : ""}`}
-                          style={{ width: `${(f / total) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <footer className="hero__card-foot">
-                <div className="hero__left">
-                  <strong>{capacity - filled} slots left</strong>
-                  <span>{filled} of {capacity} filled. Closes in 2 days</span>
-                </div>
-                <Link href="/events" className="hero__card-link">
-                  View event
-                </Link>
-              </footer>
-            </article>
-          </div>
+      {/* Grid frame */}
+      <div className="hero__lines" aria-hidden>
+        <div className="hero__lines-inner">
+          {VLINES.map((p) => (
+            <span
+              key={p}
+              className={`hero__vline${p === 0 || p === 100 ? "" : " hero__vline--inner"}`}
+              style={{ left: `calc(${p}% - ${p === 100 ? 1 : 0}px)` }}
+            />
+          ))}
+          <span className="hero__hline hero__hline--top" />
+          <span className="hero__hline hero__hline--bottom" />
         </div>
       </div>
 
-      {/* Stats strip */}
-      <div className="hero__stats">
-        <div className="hero__stats-inner">
-          {STATS.map((s) => (
-            <div key={s.label} className="hero__stat">
-              <div className="hero__stat-num" data-count={s.value} data-suffix={s.suffix}>
-                {s.value.toLocaleString()}
-                {s.suffix}
-              </div>
-              <div className="hero__stat-label">{s.label}</div>
-            </div>
+      {/* Decorative gear */}
+      <div className="hero__gear" aria-hidden>
+        <svg viewBox="0 0 400 400" fill="none" stroke="currentColor" strokeWidth="44">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <path key={i} d="M200 128 C 262 128, 300 92, 304 18" transform={`rotate(${i * 45} 200 200)`} />
           ))}
+        </svg>
+      </div>
+
+      <div className="hero__inner">
+        <p className="hero__label">
+          <span>//</span> Meet {BRAND}
+        </p>
+
+        <h1 className="hero__title">
+          <span className="hero__line">
+            <span className="hero__line-inner">We Power Tech Events</span>
+          </span>
+          <span className="hero__line">
+            <span className="hero__line-inner">That Build Community.</span>
+          </span>
+        </h1>
+
+        <div className="hero__copy">
+          <p className="hero__sub">
+            {BRAND} oirganize hackathons, workshops and meetups, and bring in skilled volunteers to run them. Join as a mentor, judge or helper, or support our events in any other way you can
+          </p>
+
+          <Link href="/events" className="hero__cta">
+            Explore Events
+            <span className="hero__cta-icon">
+              <Arrow />
+            </span>
+          </Link>
+        </div>
+
+        {/* Featured event */}
+        <Link href="/events" className="hero__feature" aria-label="Featured event: Dhaka Hackathon 2026">
+          <span className="hero__feature-label">
+            <Bolt /> 
+          </span>
+
+          <div className={`hero__shot${imgFailed ? " hero__shot--fallback" : ""}`}>
+            {imgFailed ? (
+              <div className="hero__window">
+                <div className="hero__window-bar">
+                  <i /> <i /> <i />
+                  <span>dhaka-hackathon.ts</span>
+                </div>
+                <pre className="hero__code">
+                  {CODE.map((line, i) => (
+                    <div key={i} className="hero__code-line">
+                      {line.map((tok, j) => (
+                        <span key={j} className={tok.c ? `hero__tok-${tok.c}` : undefined}>
+                          {tok.t}
+                        </span>
+                      ))}
+                    </div>
+                  ))}
+                </pre>
+              </div>
+            ) : (
+              <Image
+                src={image}
+                alt={FEATURED.alt}
+                fill
+                priority
+                sizes="(max-width: 1024px) 340px, 270px"
+                className="hero__img"
+                onError={() => setImgFailed(true)}
+              />
+            )}
+            <span className="hero__slots">{FEATURED.slots}</span>
+          </div>
+
+          <span className="hero__caption">{FEATURED.caption}</span>
+        </Link>
+
+        {/* Tech marquee */}
+        <div className="hero__trust">
+          <p className="hero__trust-label">Powered by the stack developers love</p>
+          <div className="hero__marquee">
+            <div className="hero__track">
+              <TechGroup />
+              <TechGroup hidden />
+            </div>
+          </div>
         </div>
       </div>
     </section>

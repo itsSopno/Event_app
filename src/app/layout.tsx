@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/layout/public/Navbar/navbar";
 import Footer from "../components/layout/public/Footer/footer";
-
+import { Fraunces } from "next/font/google";
+const display = Fraunces({ subsets: ["latin"], variable: "--font-display" });
+// <html className={display.variable} ...>
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${display.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <div>

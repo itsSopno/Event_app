@@ -135,7 +135,7 @@ export default function Hero() {
         <p className="hero__label">
           <span>//</span> Meet {BRAND}
         </p>
-
+        
         <h1 className="hero__title">
           <span className="hero__line">
             <span className="hero__line-inner">We Power Tech Events</span>

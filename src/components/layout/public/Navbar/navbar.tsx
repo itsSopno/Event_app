@@ -335,7 +335,7 @@
 
 import Link from 'next/link'
 import { useRef, useState } from 'react'
-
+import './navbar.css'
 type DropItem = {
     title: string
     desc: string
@@ -383,9 +383,9 @@ const NAV: NavItem[] = [
             {
                 title: 'CODING',
                 desc: 'Contests and workshops',
-                href: '/event/coding',
+                href: './coding.jpg',
                 icon: '</>',
-                image: '/nav/coding.png',
+                image: './coding.jpg',
                 imageTitle: 'Coding events',
                 imageDesc: 'Compete, learn and build with other coders.',
             },
@@ -427,7 +427,7 @@ export default function Navbar() {
     }
 
     return (
-        <header className="relative z-50 w-full bg-black text-white">
+        <header className="sticky top-0 z-50 w-full text-white bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)]">
             <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
                 {/* Brand name (logo er jaigay) */}
                 <Link href="/" className="text-xl font-bold tracking-tight">

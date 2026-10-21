@@ -1,0 +1,8 @@
+.nav{
+    --h-bg: #051817;
+}
+.navbar-bg {
+  background:
+    radial-gradient(ellipse at 75% 30%, #0a2a28 0%, transparent 60%),
+    var(--h-bg);
+}

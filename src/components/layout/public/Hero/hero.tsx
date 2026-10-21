@@ -15,7 +15,7 @@ const ROSTER = [
   { role: "Mentor", filled: 7, total: 8 },
   { role: "Judge", filled: 3, total: 4 },
   { role: "Speaker", filled: 2, total: 2 },
-  { role: "Tech Support", filled: 5, total: 6 },
+  { role: "Tech support", filled: 5, total: 6 },
 ];
 
 const STATS = [
@@ -49,16 +49,15 @@ export default function Hero() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-        tl.from(".hero__eyebrow", { y: 12, opacity: 0, duration: 0.6 })
-          .from(".hero__line-inner", { yPercent: 105, duration: 0.9, stagger: 0.12, ease: "power4.out" }, "-=0.3")
-          .fromTo(".hero__mark", { "--mark-scale": 0 }, { "--mark-scale": 1, duration: 0.7, ease: "power2.inOut" }, "-=0.35")
-          .from(".hero__sub", { y: 16, opacity: 0, duration: 0.6 }, "-=0.5")
-          .from(".hero__search", { y: 16, opacity: 0, duration: 0.6 }, "-=0.4")
-          .from(".hero__quick, .hero__cta", { y: 12, opacity: 0, stagger: 0.08, duration: 0.5 }, "-=0.35")
-          .from(".roster", { y: 32, opacity: 0, duration: 0.9, ease: "expo.out" }, 0.4)
-          .from(".row", { y: 10, opacity: 0, stagger: 0.07, duration: 0.5 }, "-=0.5")
-          .from(".row__bar", { scaleX: 0, duration: 1, stagger: 0.07, ease: "power3.inOut" }, "-=0.5")
-          .from(".hero__stats", { opacity: 0, y: 16, duration: 0.7 }, "-=0.6");
+        tl.from(".hero__status", { y: 10, opacity: 0, duration: 0.5 })
+          .from(".hero__line-inner", { yPercent: 105, duration: 0.85, stagger: 0.1, ease: "power4.out" }, "-=0.2")
+          .from(".hero__sub", { y: 14, opacity: 0, duration: 0.5 }, "-=0.45")
+          .from(".hero__search", { y: 14, opacity: 0, duration: 0.5 }, "-=0.35")
+          .from(".hero__quick, .hero__cta", { y: 10, opacity: 0, stagger: 0.08, duration: 0.45 }, "-=0.3")
+          .from(".hero__card-wrap", { y: 28, opacity: 0, duration: 0.9, ease: "expo.out" }, 0.35)
+          .from(".hero__row", { y: 8, opacity: 0, stagger: 0.07, duration: 0.45 }, "-=0.5")
+          .from(".hero__bar", { scaleX: 0, duration: 0.9, stagger: 0.07, ease: "power3.inOut" }, "-=0.5")
+          .from(".hero__stats", { opacity: 0, y: 12, duration: 0.6 }, "-=0.6");
 
         gsap.utils.toArray<HTMLElement>("[data-count]").forEach((el) => {
           const target = Number(el.dataset.count);
@@ -66,8 +65,8 @@ export default function Hero() {
           const obj = { v: 0 };
           gsap.to(obj, {
             v: target,
-            duration: 1.6,
-            delay: 1,
+            duration: 1.5,
+            delay: 0.9,
             ease: "power2.out",
             onUpdate: () => {
               el.textContent = Math.round(obj.v).toLocaleString() + suffix;
@@ -88,16 +87,17 @@ export default function Hero() {
       <div className="hero__container">
         {/* Copy */}
         <div className="hero__copy">
-          <span className="hero__eyebrow">Volunteer platform for tech communities</span>
+          <span className="hero__status">
+            <span className="hero__dot" aria-hidden />
+            Volunteer registrations are open
+          </span>
 
           <h1 className="hero__title">
             <span className="hero__line">
               <span className="hero__line-inner">Where developers</span>
             </span>
             <span className="hero__line">
-              <span className="hero__line-inner">
-                <span className="hero__mark">give back.</span>
-              </span>
+              <span className="hero__line-inner">give back.</span>
             </span>
           </h1>
 
@@ -120,18 +120,25 @@ export default function Hero() {
                 aria-label="Search events by title"
               />
             </label>
-            <select
-              className="hero__select"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              aria-label="Category"
-            >
-              <option value="">All categories</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-            <button type="submit" className="hero__btn">Search</button>
+
+            <label className="hero__select-wrap">
+              <select
+                className="hero__select"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                aria-label="Category"
+              >
+                <option value="">All categories</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+              <svg className="hero__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </label>
+
+            <button type="submit" className="hero__btn">Search events</button>
           </form>
 
           <div className="hero__quick">
@@ -148,39 +155,57 @@ export default function Hero() {
               Become a volunteer
             </Link>
             <Link href="/register?role=organizer" className="hero__cta-alt">
-              I&apos;m hosting an event
+              Host an event
             </Link>
           </div>
         </div>
 
         {/* Roster card */}
         <div className="hero__visual">
-          <div className="roster">
-            <article className="roster__card">
-              <header className="roster__head">
-                <div className="roster__top">
-                  <span className="roster__label">Volunteer roster</span>
-                  <span className="chip">Hackathon</span>
+          <div className="hero__card-wrap">
+            <article className="hero__card">
+              <header className="hero__card-head">
+                <div className="hero__card-top">
+                  <span className="hero__chip">Hackathon</span>
+                  <span className="hero__open">
+                    <span className="hero__dot" aria-hidden />
+                    Open
+                  </span>
                 </div>
-                <h2 className="roster__title">Dhaka Hackathon 2026</h2>
-                <p className="roster__meta">12 Nov 2026 · Dhaka</p>
+                <h2 className="hero__card-title">Dhaka Hackathon 2026</h2>
+                <div className="hero__meta">
+                  <span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <rect x="3" y="5" width="18" height="16" rx="2" />
+                      <path d="M16 3v4M8 3v4M3 11h18" />
+                    </svg>
+                    12 Nov 2026
+                  </span>
+                  <span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" />
+                      <circle cx="12" cy="10" r="2.5" />
+                    </svg>
+                    Dhaka
+                  </span>
+                </div>
               </header>
 
-              <div className="roster__rows">
+              <div className="hero__rows">
                 {ROSTER.map(({ role, filled: f, total }) => {
                   const isFull = f === total;
                   return (
-                    <div key={role} className="row">
-                      <div className="row__top">
-                        <span className="row__name">{role}</span>
-                        <span className="row__count">
-                          {isFull && <span className="row__full">Full</span>}
-                          {f} / {total}
+                    <div key={role} className="hero__row">
+                      <div className="hero__row-top">
+                        <span className="hero__row-name">{role}</span>
+                        <span className="hero__row-count">
+                          {isFull && <span className="hero__full">Full</span>}
+                          {f} of {total}
                         </span>
                       </div>
-                      <div className="row__track">
+                      <div className="hero__track" aria-hidden>
                         <div
-                          className={`row__bar${isFull ? " row__bar--full" : ""}`}
+                          className={`hero__bar${isFull ? " hero__bar--full" : ""}`}
                           style={{ width: `${(f / total) * 100}%` }}
                         />
                       </div>
@@ -189,14 +214,12 @@ export default function Hero() {
                 })}
               </div>
 
-              <footer className="roster__foot">
-                <div className="roster__left">
-                  <strong>
-                    {capacity - filled} slots left · {filled}/{capacity}
-                  </strong>
-                  <span>Registration closes in 2 days</span>
+              <footer className="hero__card-foot">
+                <div className="hero__left">
+                  <strong>{capacity - filled} slots left</strong>
+                  <span>{filled} of {capacity} filled. Closes in 2 days</span>
                 </div>
-                <Link href="/events" className="roster__link">
+                <Link href="/events" className="hero__card-link">
                   View event
                 </Link>
               </footer>
@@ -209,12 +232,12 @@ export default function Hero() {
       <div className="hero__stats">
         <div className="hero__stats-inner">
           {STATS.map((s) => (
-            <div key={s.label} className="stat">
-              <div className="stat__num" data-count={s.value} data-suffix={s.suffix}>
+            <div key={s.label} className="hero__stat">
+              <div className="hero__stat-num" data-count={s.value} data-suffix={s.suffix}>
                 {s.value.toLocaleString()}
                 {s.suffix}
               </div>
-              <div className="stat__label">{s.label}</div>
+              <div className="hero__stat-label">{s.label}</div>
             </div>
           ))}
         </div>

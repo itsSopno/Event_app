@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import GridLines from "@/components/shared/GridLines/GridLines";
 
 // ── Button styles ─────────────────────────────────────────────────────────────
 export const btnPrimary =
@@ -93,8 +94,9 @@ interface PageShellProps {
 
 export function PageShell({ eyebrow, title, intro, children }: PageShellProps) {
     return (
-        <main className="min-h-screen bg-[#041a17] px-6 py-16 text-white sm:px-10">
-            <div className="mx-auto max-w-3xl">
+        <main className="relative min-h-screen bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] px-6 py-16 text-white sm:px-10">
+            <GridLines />
+            <div className="relative mx-auto max-w-3xl z-10">
                 {eyebrow && (
                     <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-[#d6f33a]/70">
                         // {eyebrow}

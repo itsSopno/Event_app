@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Card, PageShell, btnGhost, btnPrimary } from "../_components/shared";
+import GridLines from "@/components/shared/GridLines/GridLines";
 
 type Step = { label: string; secs: number; scale: number };
 type PatternKey = "box" | "relax" | "easy";
@@ -94,12 +95,14 @@ export default function BreathingPage() {
             }
             intro="Follow the circle. Slow breathing lowers stress and helps you think clearly again. Sit back, relax your shoulders and unclench your jaw."
         >
+          
             <Card
                 tag="$ breathe --pattern"
                 title="Breathing exercise"
                 desc="Choose a pattern and breathe in time with the circle."
                 className="mx-auto max-w-xl"
             >
+                  <GridLines/>
                 <div className="mb-3 flex flex-wrap gap-2">
                     {(Object.keys(PATTERNS) as PatternKey[]).map((k) => (
                         <button

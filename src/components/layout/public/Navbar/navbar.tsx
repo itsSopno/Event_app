@@ -38,7 +38,7 @@ const NAV: NavItem[] = [
             {
                 title: 'REGISTER',
                 desc: 'Create a new account',
-                href: '/register',
+                href: '/singup',
                 icon: UserRoundPlusIcon,
                 image: '/nav/register.png',
                 imageTitle: 'Join the community',

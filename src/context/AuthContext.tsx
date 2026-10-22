@@ -13,7 +13,8 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    role: "organizer" | "volunteer";
+    role: "organizer" | "volunteer" | "public";
+    profileCompleted: boolean;
 }
 
 interface AuthContextType {
@@ -21,13 +22,19 @@ interface AuthContextType {
     token: string | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
-    register: (
-        name: string,
-        email: string,
-        password: string,
-        role: "organizer" | "volunteer"
-    ) => Promise<void>;
+    register: (name: string, email: string, password: string) => Promise<void>;
+    completeProfile: (data: ProfileData) => Promise<void>;
     logout: () => void;
+}
+
+export interface ProfileData {
+    role: "organizer" | "volunteer" | "public";
+    bio?: string;
+    skills?: string;
+    interests?: string;
+    avatar?: string;
+    location?: string;
+    phone?: string;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -47,33 +54,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
     }, []);
 
-    const login = async (email: string, password: string) => {
-        const data = await api.post<{ data: { token: string; user: User } }>(
-            "/api/auth/login",
-            { email, password }
-        );
-        const { token: t, user: u } = data.data;
+    const persistAuth = (t: string, u: User) => {
         localStorage.setItem("token", t);
         localStorage.setItem("user", JSON.stringify(u));
         setToken(t);
         setUser(u);
     };
 
-    const register = async (
-        name: string,
-        email: string,
-        password: string,
-        role: "organizer" | "volunteer"
-    ) => {
+    const login = async (email: string, password: string) => {
+        const data = await api.post<{ data: { token: string; user: User } }>(
+            "/api/auth/login",
+            { email, password }
+        );
+        persistAuth(data.data.token, data.data.user);
+    };
+
+    const register = async (name: string, email: string, password: string) => {
         const data = await api.post<{ data: { token: string; user: User } }>(
             "/api/auth/register",
-            { name, email, password, role }
+            { name, email, password }
         );
-        const { token: t, user: u } = data.data;
-        localStorage.setItem("token", t);
-        localStorage.setItem("user", JSON.stringify(u));
-        setToken(t);
-        setUser(u);
+        persistAuth(data.data.token, data.data.user);
+    };
+
+    const completeProfile = async (profileData: ProfileData) => {
+        const data = await api.post<{ data: { token: string; user: User } }>(
+            "/api/auth/complete-profile",
+            profileData
+        );
+        persistAuth(data.data.token, data.data.user);
     };
 
     const logout = () => {
@@ -84,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+        <AuthContext.Provider value={{ user, token, loading, login, register, completeProfile, logout }}>
             {children}
         </AuthContext.Provider>
     );

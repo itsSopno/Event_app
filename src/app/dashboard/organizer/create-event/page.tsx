@@ -1,9 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+
+async function uploadToImgBB(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("image", file);
+    const res = await fetch(
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_KEY}`,
+        { method: "POST", body: formData }
+    );
+    if (!res.ok) throw new Error("Image upload failed");
+    const json = await res.json();
+    return json.data.url as string;
+}
 
 const CATEGORIES = [
     { label: "Hackathon", value: "hackathon" },
@@ -46,11 +59,32 @@ export default function CreateEventPage() {
         requiredSkills: "",
         registrationDeadline: "",
     });
+    const [imageUrl, setImageUrl] = useState("");
+    const [imagePreview, setImagePreview] = useState("");
+    const [imageUploading, setImageUploading] = useState(false);
+    const imageRef = useRef<HTMLInputElement>(null);
     const [aiIdea, setAiIdea] = useState("");
     const [aiResult, setAiResult] = useState<AiResult | null>(null);
     const [aiLoading, setAiLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
+
+    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setImagePreview(URL.createObjectURL(file));
+        setImageUploading(true);
+        setError("");
+        try {
+            const url = await uploadToImgBB(file);
+            setImageUrl(url);
+        } catch {
+            setError("Image upload failed. Please try again.");
+            setImagePreview("");
+        } finally {
+            setImageUploading(false);
+        }
+    };
 
     if (!loading && (!user || user.role !== "organizer")) {
         router.replace("/login");
@@ -97,7 +131,12 @@ export default function CreateEventPage() {
                 .split(",")
                 .map((s) => s.trim())
                 .filter(Boolean);
-            await api.post("/api/events", { ...form, requiredSkills: skills, status });
+            await api.post("/api/events", {
+                ...form,
+                requiredSkills: skills,
+                status,
+                image: imageUrl || undefined,
+            });
             router.push("/dashboard/organizer/events");
         } catch (err: unknown) {
             setError(err instanceof Error ? err.message : "Failed to create event");
@@ -280,6 +319,44 @@ export default function CreateEventPage() {
                                 className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#4eca8b] transition"
                             />
                         </div>
+
+                        {/* Event Banner Image */}
+                        <div className="md:col-span-2">
+                            <label className="block text-sm text-gray-300 mb-1.5">Event Banner Image</label>
+                            <div
+                                onClick={() => imageRef.current?.click()}
+                                className={`relative w-full h-44 rounded-xl border-2 border-dashed cursor-pointer overflow-hidden flex items-center justify-center transition ${
+                                    imagePreview ? "border-[#4eca8b]" : "border-[#0d3330] hover:border-[#4eca8b]/60"
+                                } bg-[#071f1e]`}
+                            >
+                                {imagePreview ? (
+                                    <Image src={imagePreview} alt="event banner" fill className="object-cover" />
+                                ) : (
+                                    <div className="text-center text-gray-500">
+                                        <span className="text-4xl block mb-2">🖼️</span>
+                                        <span className="text-sm">Click to upload banner image</span>
+                                        <span className="text-xs block mt-1 opacity-60">PNG, JPG, WEBP up to 10MB</span>
+                                    </div>
+                                )}
+                                {imageUploading && (
+                                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                        <span className="text-[#4eca8b] animate-pulse font-medium">Uploading…</span>
+                                    </div>
+                                )}
+                                {imagePreview && !imageUploading && (
+                                    <div className="absolute bottom-2 right-2 bg-black/60 text-[#4eca8b] text-xs px-2 py-1 rounded-lg">
+                                        ✓ Uploaded — click to change
+                                    </div>
+                                )}
+                            </div>
+                            <input
+                                ref={imageRef}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleImageChange}
+                            />
+                        </div>
                     </div>
 
                     {error && (
@@ -292,7 +369,7 @@ export default function CreateEventPage() {
                         <button
                             type="button"
                             onClick={(e) => handleSubmit(e, "draft")}
-                            disabled={submitting}
+                            disabled={submitting || imageUploading}
                             className="flex-1 py-3 rounded-lg border border-[#0d3330] text-gray-300 hover:border-[#4eca8b] transition disabled:opacity-60"
                         >
                             Save as Draft
@@ -300,7 +377,7 @@ export default function CreateEventPage() {
                         <button
                             type="button"
                             onClick={(e) => handleSubmit(e, "published")}
-                            disabled={submitting}
+                            disabled={submitting || imageUploading}
                             className="flex-1 py-3 rounded-lg bg-[#4eca8b] text-[#051817] font-semibold hover:bg-[#3db87a] transition disabled:opacity-60"
                         >
                             {submitting ? "Publishing…" : "Publish Event →"}

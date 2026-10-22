@@ -5,15 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-type Role = "organizer" | "volunteer";
-
 export default function SignupPage() {
   const router = useRouter();
   const { register } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<Role>("volunteer");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -26,8 +23,9 @@ export default function SignupPage() {
     setError("");
     setLoading(true);
     try {
-      await register(name, email, password, role);
-      router.push("/dashboard");
+      await register(name, email, password);
+      // After signup → go to profile setup
+      router.push("/setup-profile");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -84,24 +82,6 @@ export default function SignupPage() {
                 className="w-full bg-[#0a2a27] border border-[#0d3330] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#4eca8b] transition"
               />
             </div>
-            <div>
-              <label className="block text-sm text-gray-300 mb-2">I am joining as a…</label>
-              <div className="grid grid-cols-2 gap-3">
-                {(["volunteer", "organizer"] as Role[]).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setRole(r)}
-                    className={`py-3 rounded-lg border text-sm font-medium transition capitalize ${role === r
-                        ? "bg-[#4eca8b] border-[#4eca8b] text-[#051817]"
-                        : "bg-transparent border-[#0d3330] text-gray-400 hover:border-[#4eca8b]"
-                      }`}
-                  >
-                    {r === "volunteer" ? "🙋 Volunteer" : "🎯 Organizer"}
-                  </button>
-                ))}
-              </div>
-            </div>
 
             {error && (
               <p className="text-red-400 text-sm bg-red-900/20 border border-red-800 rounded-lg px-4 py-3">
@@ -114,7 +94,7 @@ export default function SignupPage() {
               disabled={loading}
               className="w-full bg-[#4eca8b] hover:bg-[#3db87a] text-[#051817] font-semibold py-3 rounded-lg transition disabled:opacity-60"
             >
-              {loading ? "Creating account…" : "Create account →"}
+              {loading ? "Creating account…" : "Continue →"}
             </button>
           </form>
         </div>

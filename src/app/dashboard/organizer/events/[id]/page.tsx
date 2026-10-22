@@ -1,8 +1,6 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
@@ -17,7 +15,7 @@ interface Volunteer {
 
 const STATUSES = ["registered", "confirmed", "attended", "cancelled"] as const;
 
-export default function EventVolunteersPage() {
+function EventVolunteersContent() {
     const { id } = useParams<{ id: string }>();
     const { user, loading } = useAuth();
     const router = useRouter();
@@ -132,5 +130,17 @@ export default function EventVolunteersPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function EventVolunteersPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#051817] flex items-center justify-center">
+                <div className="text-[#4eca8b] animate-pulse">Loading…</div>
+            </div>
+        }>
+            <EventVolunteersContent />
+        </Suspense>
     );
 }

@@ -52,11 +52,12 @@ export default function EventDetailPage() {
     useEffect(() => {
         if (user?.role === "volunteer") {
             api
-                .get<{ data: Registration[] }>(`/api/registrations/my?event=${id}`)
+                .get<{ data: Registration[] }>(`/api/registrations/my-registrations`)
                 .then((res) => {
-                    const reg = res.data.find((r: Registration & { event: string }) => (r as unknown as { event: string }).event === id || true);
-                    // We'll check after mount
-                    setRegistration(res.data[0] || null);
+                    const found = res.data.find((r: Registration & { event: { _id: string } }) =>
+                        (r.event as unknown as { _id: string })?._id === id || (r as unknown as { event: string }).event === id
+                    );
+                    setRegistration(found || null);
                 })
                 .catch(() => { });
         }
@@ -71,7 +72,7 @@ export default function EventDetailPage() {
         setRegLoading(true);
         setMessage(null);
         try {
-            await api.post("/api/registrations", { eventId: id });
+            await api.post(`/api/registrations/events/${id}/register`, {});
             setMessage({ type: "success", text: "Successfully registered! Check My Events to view your status." });
             setRegistration({ _id: "temp", status: "registered" });
             setEvent((prev) => prev ? { ...prev, registeredCount: (prev.registeredCount || 0) + 1 } : prev);
@@ -87,7 +88,7 @@ export default function EventDetailPage() {
         if (!confirm("Cancel your registration?")) return;
         setRegLoading(true);
         try {
-            await api.delete(`/api/registrations/${registration._id}`);
+            await api.put(`/api/registrations/${registration._id}/cancel`, {});
             setMessage({ type: "success", text: "Registration cancelled." });
             setRegistration(null);
             setEvent((prev) => prev ? { ...prev, registeredCount: Math.max(0, (prev.registeredCount || 0) - 1) } : prev);
@@ -191,8 +192,8 @@ export default function EventDetailPage() {
 
                             {message && (
                                 <div className={`text-sm px-4 py-3 rounded-lg ${message.type === "success"
-                                        ? "bg-green-900/20 border border-green-700 text-green-400"
-                                        : "bg-red-900/20 border border-red-700 text-red-400"
+                                    ? "bg-green-900/20 border border-green-700 text-green-400"
+                                    : "bg-red-900/20 border border-red-700 text-red-400"
                                     }`}>
                                     {message.text}
                                 </div>

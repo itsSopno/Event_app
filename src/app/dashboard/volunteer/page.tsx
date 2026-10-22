@@ -31,7 +31,7 @@ export default function VolunteerDashboard() {
         if (!user) { router.replace("/login"); return; }
         if (user.role === "organizer") { router.replace("/dashboard/organizer"); return; }
         api
-            .get<{ data: Registration[] }>("/api/registrations/my")
+            .get<{ data: Registration[] }>("/api/registrations/my-registrations")
             .then((res) => setRegistrations(res.data))
             .catch(() => { })
             .finally(() => setFetching(false));

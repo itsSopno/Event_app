@@ -6,8 +6,23 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 
 const CATEGORIES = [
-    "Hackathon", "Workshop", "Meetup", "Webinar", "Conference",
-    "Bootcamp", "Competition", "Volunteering", "Other",
+    { label: "Hackathon", value: "hackathon" },
+    { label: "Workshop", value: "workshop" },
+    { label: "Meetup", value: "meetup" },
+    { label: "Webinar", value: "webinar" },
+    { label: "Conference", value: "conference" },
+    { label: "Bootcamp", value: "bootcamp" },
+    { label: "Competition", value: "competition" },
+    { label: "Volunteering", value: "volunteering" },
+    { label: "Environment", value: "environment" },
+    { label: "Education", value: "education" },
+    { label: "Health", value: "health" },
+    { label: "Community", value: "community" },
+    { label: "Sports", value: "sports" },
+    { label: "Arts", value: "arts" },
+    { label: "Food", value: "food" },
+    { label: "Technology", value: "technology" },
+    { label: "Other", value: "other" },
 ];
 
 interface AiResult {
@@ -26,7 +41,7 @@ export default function CreateEventPage() {
         description: "",
         date: "",
         location: "",
-        category: "Workshop",
+        category: "workshop",
         maxCapacity: 20,
         requiredSkills: "",
         registrationDeadline: "",
@@ -238,7 +253,7 @@ export default function CreateEventPage() {
                                 className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4eca8b] transition"
                             >
                                 {CATEGORIES.map((c) => (
-                                    <option key={c} value={c}>{c}</option>
+                                    <option key={c.value} value={c.value}>{c.label}</option>
                                 ))}
                             </select>
                         </div>

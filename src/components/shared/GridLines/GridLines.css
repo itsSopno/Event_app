@@ -1,0 +1,72 @@
+/* ============ Shared Grid Lines ============ */
+.grid-lines {
+    --gl-line: rgba(255, 255, 255, 0.08);
+    --gl-mark: rgba(255, 255, 255, 0.28);
+    --gl-w: min(1350px, calc(100% - 2 * clamp(16px, 4vw, 48px)));
+    --gl-pad-y: clamp(40px, 9vh, 80px);
+
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.grid-lines__inner {
+    position: relative;
+    width: var(--gl-w);
+    height: 100%;
+}
+
+.grid-lines__vline {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--gl-line);
+}
+
+.grid-lines__hline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--gl-line);
+}
+
+.grid-lines__hline--top {
+    top: var(--gl-pad-y);
+}
+
+.grid-lines__hline--bottom {
+    bottom: var(--gl-pad-y);
+}
+
+/* crosshair marks at line ends */
+.grid-lines__hline::before,
+.grid-lines__hline::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    width: 11px;
+    height: 11px;
+    background:
+        linear-gradient(var(--gl-mark), var(--gl-mark)) center / 1px 100% no-repeat,
+        linear-gradient(var(--gl-mark), var(--gl-mark)) center / 100% 1px no-repeat;
+}
+
+.grid-lines__hline::before {
+    left: -5px;
+}
+
+.grid-lines__hline::after {
+    right: -5px;
+}
+
+/* Hide inner lines on tablet/mobile */
+@media (max-width: 1024px) {
+    .grid-lines__vline--inner {
+        display: none;
+    }
+}

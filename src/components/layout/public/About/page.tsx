@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import './about.css'
+import GridLines from '../../../../components/shared/GridLines/GridLines'
 const STATS = [
     { id: '01', value: '83+', label: 'Events hosted', featured: true },
     { id: '02', value: '88+', label: 'Active members' },
@@ -21,10 +22,11 @@ const FEATURES = [
 
 export default function About() {
     return (
-        <section id="about" className="bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] text-white">
+        <section id="about" className="relative overflow-hidden bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] text-white">
+            <GridLines />
             <div className="mx-auto max-w-7xl px-6">
                 {/* Giant heading */}
-                <h2 className="select-none bg-gradient-to-r from-[##2dd4bf] to-[#6c7686] bg-clip-text pt-10 text-center text-[24vw] font-black uppercase leading-[0.8] tracking-tighter text-transparent lg:text-[20rem]">
+                <h2 className="select-none bg-gradient-to-r from-[#2dd4bf] to-[#6c7686] bg-clip-text pt-10 text-center text-[24vw] font-black uppercase leading-[0.8] tracking-tighter text-transparent lg:text-[20rem]">
                     About
                 </h2>
 
@@ -43,7 +45,7 @@ export default function About() {
                         </p>
                     </div>
 
-                    <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[##2dd4bf] to-[#6c7686]">
+                    <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[#2dd4bf] to-[#6c7686]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src="https://i.pinimg.com/736x/19/f9/9e/19f99e101ac2a9453b4a8c7e3ad93bd8.jpg"
@@ -84,11 +86,10 @@ export default function About() {
                     {STATS.map((s) => (
                         <div
                             key={s.id}
-                            className={`relative flex min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border border-white/5 p-8 ${
-                                s.featured
-                                    ? 'bg-gradient-to-br from-[##2dd4bf] to-[#6c7686] lg:col-span-2'
-                                    : 'bg-neutral-900'
-                            }`}
+                            className={`relative flex min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border border-white/5 p-8 ${s.featured
+                                ? 'bg-gradient-to-br from-[#2dd4bf] to-[#6c7686] lg:col-span-2'
+                                : 'bg-neutral-900'
+                                }`}
                         >
                             <span className="font-mono text-sm">
                                 <span className="text-[#6c7686]">/</span> {s.id}
@@ -96,9 +97,8 @@ export default function About() {
                             <div>
                                 <p className="text-7xl font-bold tracking-tighter">{s.value}</p>
                                 <p
-                                    className={`mt-2 text-sm font-medium uppercase ${
-                                        s.featured ? 'text-white/80' : 'text-neutral-400'
-                                    }`}
+                                    className={`mt-2 text-sm font-medium uppercase ${s.featured ? 'text-white/80' : 'text-neutral-400'
+                                        }`}
                                 >
                                     {s.label}
                                 </p>

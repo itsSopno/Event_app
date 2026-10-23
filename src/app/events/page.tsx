@@ -167,7 +167,7 @@ export default function EventsPage() {
 
                                             {/* Body */}
                                             <div className="p-5 flex flex-col flex-1">
-                                                <h2 className="font-sans text-xl font-semibold leading-snug mb-2 line-clamp-2 group-hover:text-[#d6f53c] transition-colors">
+                                                <h2 className="font-sans text-xl font-semibold leading-snug mb-2 line-clamp-2 group-hover:text-[#6c7686] transition-colors">
                                                     {event.title}
                                                 </h2>
                                                 <p className="text-gray-400 text-xs leading-relaxed line-clamp-2 mb-5">
@@ -235,7 +235,7 @@ export default function EventsPage() {
                                     <button
                                         onClick={() => setPage((p) => Math.max(1, p - 1))}
                                         disabled={page === 1}
-                                        className="px-4 py-2 rounded-full border border-[#6fe0c8]/20 text-gray-300 disabled:opacity-30 hover:border-[#d6f53c] transition"
+                                        className="px-4 py-2 rounded-full border border-[#6fe0c8]/20 text-gray-300 disabled:opacity-30 hover:border-[#6c7686] transition"
                                     >
                                         Previous
                                     </button>
@@ -245,7 +245,7 @@ export default function EventsPage() {
                                     <button
                                         onClick={() => setPage((p) => p + 1)}
                                         disabled={page * 9 >= total}
-                                        className="px-4 py-2 rounded-full border border-[#6fe0c8]/20 text-gray-300 disabled:opacity-30 hover:border-[#d6f53c] transition"
+                                        className="px-4 py-2 rounded-full border border-[#6fe0c8]/20 text-gray-300 disabled:opacity-30 hover:border-[#6c7686] transition"
                                     >
                                         Next
                                     </button>

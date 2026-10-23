@@ -139,7 +139,7 @@ export default function EventDetailPage() {
     if (loading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-[#051817]">
-                <p className="animate-pulse font-mono text-sm text-[#d4f542]">$ loading event...</p>
+                <p className="animate-pulse font-mono text-sm text-[#6c7686]">$ loading event...</p>
             </div>
         );
     }
@@ -155,7 +155,7 @@ export default function EventDetailPage() {
                 <p className="text-sm text-white/50">It may have been removed or the link is wrong.</p>
                 <button
                     onClick={() => router.push("/events")}
-                    className="mt-2 inline-flex items-center gap-2 rounded-sm bg-[#d4f542] px-4 py-2 font-mono text-xs font-medium text-black transition-colors hover:bg-white"
+                    className="mt-2 inline-flex items-center gap-2 rounded-sm bg-[#6c7686] px-4 py-2 font-mono text-xs font-medium text-black transition-colors hover:bg-white"
                 >
                     <ArrowLeft className="h-3.5 w-3.5" /> Back to events
                 </button>
@@ -172,7 +172,7 @@ export default function EventDetailPage() {
             <div className="mx-auto max-w-5xl px-4 py-10">
                 <button
                     onClick={() => router.back()}
-                    className="mb-10 inline-flex items-center gap-2 font-mono text-xs text-white/50 transition-colors hover:text-[#d4f542]"
+                    className="mb-10 inline-flex items-center gap-2 font-mono text-xs text-white/50 transition-colors hover:text-[#6c7686]"
                 >
                     <ArrowLeft className="h-3.5 w-3.5" /> back
                 </button>
@@ -181,7 +181,7 @@ export default function EventDetailPage() {
                     {/* Main content */}
                     <div className="space-y-10 lg:col-span-2">
                         <header>
-                            <p className="font-mono text-xs text-[#d4f542]">
+                            <p className="font-mono text-xs text-[#6c7686]">
                                 {"// "}
                                 {event.category.toLowerCase()}
                             </p>
@@ -252,7 +252,7 @@ export default function EventDetailPage() {
                                 <div>
                                     <div className="mb-2 flex items-baseline justify-between font-mono text-xs">
                                         <span className="text-white/50">volunteers</span>
-                                        <span className={isFull ? "text-red-400" : "text-[#d4f542]"}>
+                                        <span className={isFull ? "text-red-400" : "text-[#6c7686]"}>
                                             {availableSlots} slot{availableSlots !== 1 ? "s" : ""} left
                                         </span>
                                     </div>
@@ -264,7 +264,7 @@ export default function EventDetailPage() {
                                                     i < filled
                                                         ? isFull
                                                             ? "bg-red-500"
-                                                            : "bg-[#d4f542]"
+                                                            : "bg-[#6c7686]"
                                                         : "bg-white/10"
                                                 }`}
                                             />
@@ -277,7 +277,7 @@ export default function EventDetailPage() {
                                         role="status"
                                         className={`rounded-sm border px-4 py-3 font-mono text-xs leading-relaxed ${
                                             message.type === "success"
-                                                ? "border-[#d4f542]/40 bg-[#d4f542]/10 text-[#d4f542]"
+                                                ? "border-[#6c7686]/40 bg-[#6c7686]/10 text-[#6c7686]"
                                                 : "border-red-500/40 bg-red-500/10 text-red-300"
                                         }`}
                                     >
@@ -292,7 +292,7 @@ export default function EventDetailPage() {
                                 ) : registration ? (
                                     <div className="space-y-3">
                                         <div className="text-center">
-                                            <span className="inline-flex items-center gap-2 font-mono text-sm font-medium text-[#d4f542]">
+                                            <span className="inline-flex items-center gap-2 font-mono text-sm font-medium text-[#6c7686]">
                                                 <Check className="h-4 w-4" /> registered
                                             </span>
                                             <p className="mt-1 font-mono text-xs text-white/40">
@@ -324,7 +324,7 @@ export default function EventDetailPage() {
                                 ) : !user ? (
                                     <button
                                         onClick={() => router.push("/login")}
-                                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-[#d4f542] py-3 font-mono text-xs font-medium text-black transition-colors hover:bg-white"
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-[#6c7686] py-3 font-mono text-xs font-medium text-black transition-colors hover:bg-white"
                                     >
                                         Log in to register <ArrowUpRight className="h-3.5 w-3.5" />
                                     </button>
@@ -332,7 +332,7 @@ export default function EventDetailPage() {
                                     <button
                                         onClick={handleRegister}
                                         disabled={regLoading}
-                                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-[#d4f542] py-3 font-mono text-xs font-medium text-black transition-colors hover:bg-white disabled:opacity-60"
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-[#6c7686] py-3 font-mono text-xs font-medium text-black transition-colors hover:bg-white disabled:opacity-60"
                                     >
                                         {regLoading ? "Registering…" : "Register as volunteer"}
                                         {!regLoading && <ArrowUpRight className="h-3.5 w-3.5" />}

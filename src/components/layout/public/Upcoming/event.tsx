@@ -201,7 +201,7 @@ export default function EventsPage() {
 function CategoryTag({ category }: { category: string }) {
     const Icon = categoryIcon(category)
     return (
-        <span className="inline-flex items-center gap-1.5 font-mono text-xs text-[#d4f542]">
+        <span className="inline-flex items-center gap-1.5 font-mono text-xs text-[#6c7686]">
             <Icon className="h-3.5 w-3.5" />
             {'// '}
             {category.toLowerCase()}
@@ -222,7 +222,7 @@ function Crosshair({ className }: { className: string }) {
     return (
         <span
             aria-hidden
-            className={`pointer-events-none absolute font-mono text-sm leading-none text-[#d4f542]/40 transition-colors group-hover:text-[#d4f542] ${className}`}
+            className={`pointer-events-none absolute font-mono text-sm leading-none text-[#6c7686]/40 transition-colors group-hover:text-[#6c7686] ${className}`}
         >
             +
         </span>
@@ -239,7 +239,7 @@ function EventCard({ event }: { event: EventItem }) {
     return (
         <Link
             href={`/events/${event._id}`}
-            className="group relative flex flex-col rounded-md border border-white/10 bg-[#120f0e] transition-colors hover:border-[#d4f542]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d4f542]"
+            className="group relative flex flex-col rounded-md border border-white/10 bg-[#120f0e] transition-colors hover:border-[#6c7686]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6c7686]"
         >
             {/* Grid crosshair corners, same as the site background */}
             <Crosshair className="-left-1.5 -top-2" />
@@ -270,7 +270,7 @@ function EventCard({ event }: { event: EventItem }) {
                         className="absolute inset-0 h-full w-full object-cover grayscale transition duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
                     />
                 )}
-                <span className="absolute bottom-3 left-3 rounded-sm bg-[#d4f542] px-2 py-1 font-mono text-xs font-medium text-black">
+                <span className="absolute bottom-3 left-3 rounded-sm bg-[#6c7686] px-2 py-1 font-mono text-xs font-medium text-black">
                     {fmtTime(event.date)}
                 </span>
                 {event.isFull && (
@@ -308,7 +308,7 @@ function EventCard({ event }: { event: EventItem }) {
                             <span
                                 key={i}
                                 className={`h-2 flex-1 rounded-[1px] ${
-                                    i < filled ? 'bg-[#d4f542]' : 'bg-white/10'
+                                    i < filled ? 'bg-[#6c7686]' : 'bg-white/10'
                                 }`}
                             />
                         ))}
@@ -323,7 +323,7 @@ function EventCard({ event }: { event: EventItem }) {
                             className={`inline-flex shrink-0 items-center gap-2 rounded-sm px-4 py-2 font-mono text-xs font-medium transition-colors ${
                                 event.isFull
                                     ? 'border border-white/20 text-white group-hover:border-white/50'
-                                    : 'bg-[#d4f542] text-black group-hover:bg-white'
+                                    : 'bg-[##6c7686] text-black group-hover:bg-white'
                             }`}
                         >
                             {event.isFull ? 'View details' : 'Join event'}

@@ -35,7 +35,7 @@ export default function EventsPage() {
     return (
         <div className="min-h-screen text-white font-mono bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)]">
             {/* faint blueprint grid behind everything */}
-            <div
+            {/* <div
                 aria-hidden
                 className="pointer-events-none fixed inset-0 opacity-[0.07]"
                 style={{
@@ -45,7 +45,7 @@ export default function EventsPage() {
                     maskImage: "radial-gradient(ellipse at 70% 20%, black 0%, transparent 70%)",
                     WebkitMaskImage: "radial-gradient(ellipse at 70% 20%, black 0%, transparent 70%)",
                 }}
-            />
+            /> */}
 
             <div className="relative max-w-6xl mx-auto px-4 border-x border-dashed border-[#6fe0c8]/15">
                 {/* ───────── Header ───────── */}
@@ -68,13 +68,13 @@ export default function EventsPage() {
                                 placeholder="Search events"
                                 value={search}
                                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                                className="w-full bg-[#0a2523]/70 border border-[#6fe0c8]/15 rounded-full pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#d6f53c] transition"
+                                className="w-full bg-[#0a2523]/70 border border-[#6fe0c8]/15 rounded-full pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#6c7686] transition"
                             />
                         </div>
                         <select
                             value={upcoming}
                             onChange={(e) => { setUpcoming(e.target.value); setPage(1); }}
-                            className="bg-[#0a2523]/70 border border-[#6fe0c8]/15 rounded-full px-5 py-2.5 text-sm text-white focus:outline-none focus:border-[#d6f53c] transition"
+                            className="bg-[#0a2523]/70 border border-[#6fe0c8]/15 rounded-full px-5 py-2.5 text-sm text-white focus:outline-none focus:border-[#6c7686] transition"
                         >
                             <option value="true">Upcoming</option>
                             <option value="false">Past</option>
@@ -91,8 +91,8 @@ export default function EventsPage() {
                                     key={c}
                                     onClick={() => { setCategory(c); setPage(1); }}
                                     className={`px-3.5 py-1.5 rounded-full text-[11px] border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d6f53c] ${active
-                                        ? "bg-[#d6f53c] border-[#d6f53c] text-[#051817] font-bold"
-                                        : "border-[#6fe0c8]/20 text-gray-400 hover:border-[#d6f53c] hover:text-white"
+                                        ? "bg-[#6c7686] border-[#6c7686] text-[#051817] font-bold"
+                                        : "border-[#6fe0c8]/20 text-gray-400 hover:border-[#6c7686] hover:text-white"
                                         }`}
                                 >
                                     {active ? "" : "// "}{c.toLowerCase()}
@@ -139,7 +139,7 @@ export default function EventsPage() {
                                         <Link
                                             href={`/events/${event._id}`}
                                             key={event._id}
-                                            className="group flex flex-col bg-[#14100f] border border-white/5 rounded-2xl overflow-hidden hover:border-[#d6f53c]/60 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d6f53c]"
+                                            className="group flex flex-col bg-[#14100f] border border-white/5 rounded-2xl overflow-hidden hover:border-[#6c7686]/60 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#6c7686]"
                                         >
                                             {/* Top band: grid preview + category + date */}
                                             <div

@@ -23,6 +23,7 @@ interface Event {
 interface Registration {
     _id: string;
     status: string;
+    event?: { _id: string } | string;
 }
 
 export default function EventDetailPage() {
@@ -54,9 +55,10 @@ export default function EventDetailPage() {
             api
                 .get<{ data: Registration[] }>(`/api/registrations/my-registrations`)
                 .then((res) => {
-                    const found = res.data.find((r: Registration & { event: { _id: string } }) =>
-                        (r.event as unknown as { _id: string })?._id === id || (r as unknown as { event: string }).event === id
-                    );
+                    const found = res.data.find((r) => {
+                        const eventId = typeof r.event === "object" ? r.event?._id : r.event;
+                        return eventId === id;
+                    });
                     setRegistration(found || null);
                 })
                 .catch(() => { });

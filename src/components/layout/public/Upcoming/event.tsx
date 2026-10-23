@@ -117,7 +117,7 @@ export default function EventsPage() {
                                     onClick={() => changeCategory(c)}
                                     className={`flex items-center gap-2 rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors ${
                                         category === c
-                                            ? 'border-[#2dd4bf] bg-[#2dd4bf] text-black'
+                                            ? 'border-[#6c7686] bg-[#6c7686] text-black'
                                             : 'border-white/15 text-white/70 hover:border-white/40 hover:text-white'
                                     }`}
                                 >

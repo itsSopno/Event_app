@@ -90,7 +90,7 @@ export default function EventsPage() {
                                 <button
                                     key={c}
                                     onClick={() => { setCategory(c); setPage(1); }}
-                                    className={`px-3.5 py-1.5 rounded-full text-[11px] border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d6f53c] ${active
+                                    className={`px-3.5 py-1.5 rounded-full text-[11px] border transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#6c7686] ${active
                                         ? "bg-[#6c7686] border-[#6c7686] text-[#051817] font-bold"
                                         : "border-[#6fe0c8]/20 text-gray-400 hover:border-[#6c7686] hover:text-white"
                                         }`}

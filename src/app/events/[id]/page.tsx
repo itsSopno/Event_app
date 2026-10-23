@@ -2,8 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+
+const LIME = "#d4f542";
+const SEGMENTS = 16;
+const GRID_BG = {
+    backgroundImage:
+        "linear-gradient(rgba(212,245,66,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(212,245,66,0.035) 1px, transparent 1px)",
+    backgroundSize: "48px 48px",
+};
 
 interface Event {
     _id: string;
@@ -24,6 +33,48 @@ interface Registration {
     _id: string;
     status: string;
     event?: { _id: string } | string;
+}
+
+/* ---------- small building blocks ---------- */
+
+function Crosshair({ className }: { className: string }) {
+    return (
+        <span
+            aria-hidden
+            className={`pointer-events-none absolute font-mono text-sm leading-none text-[#d4f542]/50 ${className}`}
+        >
+            +
+        </span>
+    );
+}
+
+function Panel({
+    title,
+    children,
+    className = "",
+}: {
+    title: string;
+    children: React.ReactNode;
+    className?: string;
+}) {
+    return (
+        <section className={`rounded-md border border-white/10 bg-[#120f0e] ${className}`}>
+            <div className="border-b border-white/10 px-5 py-3 font-mono text-xs text-[#d4f542]">
+                {"// "}
+                {title}
+            </div>
+            <div className="p-5">{children}</div>
+        </section>
+    );
+}
+
+function SpecRow({ label, children }: { label: string; children: React.ReactNode }) {
+    return (
+        <div className="flex flex-col gap-1 py-3 sm:flex-row sm:gap-6">
+            <dt className="w-40 shrink-0 font-mono text-xs text-white/40">{label}</dt>
+            <dd className="min-w-0 text-sm text-white/90">{children}</dd>
+        </div>
+    );
 }
 
 export default function EventDetailPage() {
@@ -103,146 +154,213 @@ export default function EventDetailPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#051817] flex items-center justify-center">
-                <div className="text-[#4eca8b] animate-pulse text-lg">Loading event…</div>
+            <div className="flex min-h-screen items-center justify-center bg-[#051817]" style={GRID_BG}>
+                <p className="animate-pulse font-mono text-sm text-[#d4f542]">$ loading event...</p>
             </div>
         );
     }
 
     if (!event) {
         return (
-            <div className="min-h-screen bg-[#051817] flex flex-col items-center justify-center gap-4">
-                <p className="text-5xl">🔍</p>
-                <p className="text-white text-xl">Event not found.</p>
-                <button onClick={() => router.push("/events")} className="text-[#4eca8b] hover:underline">
-                    Back to Events
+            <div
+                className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#051817] px-4 text-center"
+                style={GRID_BG}
+            >
+                <p className="font-mono text-xs text-[#d4f542]">{"// 404"}</p>
+                <p className="text-3xl font-bold uppercase tracking-tight text-white">Event not found</p>
+                <p className="text-sm text-white/50">It may have been removed or the link is wrong.</p>
+                <button
+                    onClick={() => router.push("/events")}
+                    className="mt-2 inline-flex items-center gap-2 rounded-sm bg-[#d4f542] px-4 py-2 font-mono text-xs font-medium text-black transition-colors hover:bg-white"
+                >
+                    <ArrowLeft className="h-3.5 w-3.5" /> Back to events
                 </button>
             </div>
         );
     }
 
+    const registered = event.registeredCount || 0;
+    const filled = Math.round(Math.min(1, registered / Math.max(event.maxCapacity, 1)) * SEGMENTS);
+    const eventDate = new Date(event.date);
+
     return (
-        <div className="min-h-screen bg-[#051817] text-white">
-            <div className="max-w-5xl mx-auto px-4 py-10">
-                <button onClick={() => router.back()} className="text-gray-400 hover:text-[#4eca8b] transition mb-6 flex items-center gap-1">
-                    ← Back
+        <div className="min-h-screen bg-[#051817] text-white" style={GRID_BG}>
+            <div className="mx-auto max-w-5xl px-4 py-10">
+                <button
+                    onClick={() => router.back()}
+                    className="mb-8 inline-flex items-center gap-2 font-mono text-xs text-white/50 transition-colors hover:text-[#d4f542]"
+                >
+                    <ArrowLeft className="h-3.5 w-3.5" /> back
                 </button>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                     {/* Main content */}
-                    <div className="lg:col-span-2 space-y-6">
-                        <div>
-                            <span className="text-xs font-medium text-[#4eca8b] bg-[#4eca8b]/10 px-3 py-1 rounded-full border border-[#4eca8b]/20">
-                                {event.category}
-                            </span>
-                            <h1 className="text-3xl font-bold mt-3 mb-2">{event.title}</h1>
-                            <p className="text-gray-400">{event.description}</p>
-                        </div>
+                    <div className="space-y-6 lg:col-span-2">
+                        <header>
+                            <p className="font-mono text-xs text-[#d4f542]">
+                                {"// "}
+                                {event.category.toLowerCase()}
+                            </p>
+                            <h1 className="mt-3 text-4xl font-black uppercase leading-[0.95] tracking-tighter md:text-5xl">
+                                {event.title}
+                            </h1>
+                            <p className="mt-4 max-w-prose leading-relaxed text-white/60">{event.description}</p>
+                        </header>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            {[
-                                { icon: "📅", label: "Date", value: new Date(event.date).toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) },
-                                { icon: "📍", label: "Location", value: event.location },
-                                { icon: "⏰", label: "Registration Deadline", value: new Date(event.registrationDeadline).toLocaleDateString() },
-                                { icon: "👥", label: "Capacity", value: `${event.maxCapacity - availableSlots} / ${event.maxCapacity} registered` },
-                            ].map((item) => (
-                                <div key={item.label} className="bg-[#071f1e] border border-[#0d3330] rounded-xl p-4">
-                                    <p className="text-sm text-gray-500 mb-1">{item.icon} {item.label}</p>
-                                    <p className="text-white font-medium">{item.value}</p>
-                                </div>
-                            ))}
-                        </div>
+                        <Panel title="details">
+                            <dl className="divide-y divide-white/10 -my-3">
+                                <SpecRow label="date">
+                                    {eventDate.toLocaleDateString("en-US", {
+                                        weekday: "long",
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                    })}
+                                </SpecRow>
+                                <SpecRow label="time">
+                                    {eventDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+                                </SpecRow>
+                                <SpecRow label="location">{event.location}</SpecRow>
+                                <SpecRow label="register by">
+                                    {new Date(event.registrationDeadline).toLocaleDateString("en-US", {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                    })}
+                                </SpecRow>
+                                <SpecRow label="registered">
+                                    {registered} / {event.maxCapacity} volunteers
+                                </SpecRow>
+                            </dl>
+                        </Panel>
 
                         {event.requiredSkills?.length > 0 && (
-                            <div className="bg-[#071f1e] border border-[#0d3330] rounded-xl p-5">
-                                <h3 className="text-sm font-semibold text-gray-300 mb-3">Required Skills</h3>
+                            <Panel title="required skills">
                                 <div className="flex flex-wrap gap-2">
                                     {event.requiredSkills.map((s) => (
-                                        <span key={s} className="text-sm bg-[#0a2a27] border border-[#0d3330] text-gray-300 px-3 py-1 rounded-lg">
+                                        <span
+                                            key={s}
+                                            className="rounded-sm border border-[#d4f542]/30 px-3 py-1 font-mono text-xs text-white/80"
+                                        >
                                             {s}
                                         </span>
                                     ))}
                                 </div>
-                            </div>
+                            </Panel>
                         )}
 
-                        <div className="bg-[#071f1e] border border-[#0d3330] rounded-xl p-5">
-                            <h3 className="text-sm font-semibold text-gray-300 mb-1">Organized by</h3>
-                            <p className="text-white">{event.organizer?.name}</p>
-                            <p className="text-gray-400 text-sm">{event.organizer?.email}</p>
-                        </div>
+                        <Panel title="organizer">
+                            <p className="font-medium text-white">{event.organizer?.name}</p>
+                            <p className="mt-1 font-mono text-xs text-white/50">{event.organizer?.email}</p>
+                        </Panel>
                     </div>
 
-                    {/* Sidebar – registration */}
-                    <div className="lg:col-span-1">
-                        <div className="sticky top-6 bg-[#071f1e] border border-[#0d3330] rounded-xl p-6 space-y-4">
-                            {/* Capacity bar */}
-                            <div>
-                                <div className="flex justify-between text-sm mb-1">
-                                    <span className="text-gray-400">Volunteers</span>
-                                    <span className={isFull ? "text-red-400" : "text-[#4eca8b]"}>
-                                        {availableSlots} slot{availableSlots !== 1 ? "s" : ""} left
-                                    </span>
-                                </div>
-                                <div className="h-2 bg-[#0a2a27] rounded-full overflow-hidden">
-                                    <div
-                                        className={`h-full rounded-full transition-all ${isFull ? "bg-red-500" : "bg-[#4eca8b]"}`}
-                                        style={{ width: `${Math.min(100, ((event.registeredCount || 0) / event.maxCapacity) * 100)}%` }}
-                                    />
-                                </div>
+                    {/* Sidebar: registration */}
+                    <aside className="lg:col-span-1">
+                        <div className="group relative sticky top-6 rounded-md border border-white/10 bg-[#120f0e]">
+                            <Crosshair className="-left-1.5 -top-2" />
+                            <Crosshair className="-right-1.5 -top-2" />
+                            <Crosshair className="-bottom-2 -left-1.5" />
+                            <Crosshair className="-bottom-2 -right-1.5" />
+
+                            <div className="border-b border-white/10 px-5 py-3 font-mono text-xs text-[#d4f542]">
+                                {"// registration"}
                             </div>
 
-                            {message && (
-                                <div className={`text-sm px-4 py-3 rounded-lg ${message.type === "success"
-                                    ? "bg-green-900/20 border border-green-700 text-green-400"
-                                    : "bg-red-900/20 border border-red-700 text-red-400"
-                                    }`}>
-                                    {message.text}
-                                </div>
-                            )}
-
-                            {user?.role === "organizer" ? (
-                                <p className="text-gray-400 text-sm text-center">Organizers cannot register as volunteers.</p>
-                            ) : registration ? (
-                                <div className="space-y-3">
-                                    <div className="text-center">
-                                        <span className="text-[#4eca8b] font-semibold">✓ Registered</span>
-                                        <p className="text-gray-400 text-xs mt-1">Status: {registration.status}</p>
+                            <div className="space-y-5 p-5">
+                                {/* Capacity */}
+                                <div>
+                                    <div className="mb-2 flex items-baseline justify-between font-mono text-xs">
+                                        <span className="text-white/50">volunteers</span>
+                                        <span className={isFull ? "text-red-400" : "text-[#d4f542]"}>
+                                            {availableSlots} slot{availableSlots !== 1 ? "s" : ""} left
+                                        </span>
                                     </div>
-                                    <button
-                                        onClick={handleCancel}
-                                        disabled={regLoading}
-                                        className="w-full py-2.5 rounded-lg border border-red-800 text-red-400 hover:bg-red-900/20 transition text-sm disabled:opacity-60"
-                                    >
-                                        {regLoading ? "Cancelling…" : "Cancel Registration"}
-                                    </button>
+                                    <div className="flex gap-1" aria-hidden>
+                                        {Array.from({ length: SEGMENTS }).map((_, i) => (
+                                            <span
+                                                key={i}
+                                                className={`h-2.5 flex-1 rounded-[1px] ${
+                                                    i < filled
+                                                        ? isFull
+                                                            ? "bg-red-500"
+                                                            : "bg-[#d4f542]"
+                                                        : "bg-white/10"
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
-                            ) : isFull ? (
-                                <button disabled className="w-full py-3 rounded-lg bg-gray-700 text-gray-400 cursor-not-allowed text-sm">
-                                    Event Full
-                                </button>
-                            ) : isPastDeadline ? (
-                                <button disabled className="w-full py-3 rounded-lg bg-gray-700 text-gray-400 cursor-not-allowed text-sm">
-                                    Registration Closed
-                                </button>
-                            ) : !user ? (
-                                <button
-                                    onClick={() => router.push("/login")}
-                                    className="w-full py-3 rounded-lg bg-[#4eca8b] text-[#051817] font-semibold hover:bg-[#3db87a] transition"
-                                >
-                                    Login to Register
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={handleRegister}
-                                    disabled={regLoading}
-                                    className="w-full py-3 rounded-lg bg-[#4eca8b] text-[#051817] font-semibold hover:bg-[#3db87a] transition disabled:opacity-60"
-                                >
-                                    {regLoading ? "Registering…" : "Register as Volunteer →"}
-                                </button>
-                            )}
+
+                                {message && (
+                                    <div
+                                        role="status"
+                                        className={`rounded-sm border px-4 py-3 font-mono text-xs leading-relaxed ${
+                                            message.type === "success"
+                                                ? "border-[#d4f542]/40 bg-[#d4f542]/10 text-[#d4f542]"
+                                                : "border-red-500/40 bg-red-500/10 text-red-300"
+                                        }`}
+                                    >
+                                        {message.text}
+                                    </div>
+                                )}
+
+                                {user?.role === "organizer" ? (
+                                    <p className="text-center text-sm text-white/50">
+                                        Organizers cannot register as volunteers.
+                                    </p>
+                                ) : registration ? (
+                                    <div className="space-y-3">
+                                        <div className="text-center">
+                                            <span className="inline-flex items-center gap-2 font-mono text-sm font-medium text-[#d4f542]">
+                                                <Check className="h-4 w-4" /> registered
+                                            </span>
+                                            <p className="mt-1 font-mono text-xs text-white/40">
+                                                status: {registration.status}
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={handleCancel}
+                                            disabled={regLoading}
+                                            className="w-full rounded-sm border border-red-500/50 py-2.5 font-mono text-xs text-red-300 transition-colors hover:bg-red-500/10 disabled:opacity-60"
+                                        >
+                                            {regLoading ? "Cancelling…" : "Cancel registration"}
+                                        </button>
+                                    </div>
+                                ) : isFull ? (
+                                    <button
+                                        disabled
+                                        className="w-full cursor-not-allowed rounded-sm border border-white/15 py-3 font-mono text-xs text-white/40"
+                                    >
+                                        Event full
+                                    </button>
+                                ) : isPastDeadline ? (
+                                    <button
+                                        disabled
+                                        className="w-full cursor-not-allowed rounded-sm border border-white/15 py-3 font-mono text-xs text-white/40"
+                                    >
+                                        Registration closed
+                                    </button>
+                                ) : !user ? (
+                                    <button
+                                        onClick={() => router.push("/login")}
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-[#d4f542] py-3 font-mono text-xs font-medium text-black transition-colors hover:bg-white"
+                                    >
+                                        Log in to register <ArrowUpRight className="h-3.5 w-3.5" />
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handleRegister}
+                                        disabled={regLoading}
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-[#d4f542] py-3 font-mono text-xs font-medium text-black transition-colors hover:bg-white disabled:opacity-60"
+                                    >
+                                        {regLoading ? "Registering…" : "Register as volunteer"}
+                                        {!regLoading && <ArrowUpRight className="h-3.5 w-3.5" />}
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
         </div>

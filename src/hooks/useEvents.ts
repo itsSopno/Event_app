@@ -20,24 +20,28 @@ export interface Event {
     createdAt: string;
 }
 
+export interface Pagination {
+    total: number;
+    page: number;
+    pages: number;
+    limit: number;
+}
+
 export interface UseEventsOptions {
-    /** Only fetch published events by default */
     status?: string;
     category?: string;
     search?: string;
+    upcoming?: "true" | "false" | "all";
     page?: number;
     limit?: number;
-    /** Auto-fetch on mount (default: true) */
     autoFetch?: boolean;
 }
 
+// Backend returns: { success, data: { events: [], pagination: {} } }
 interface ApiResponse {
-    data: Event[];
-    pagination?: {
-        total: number;
-        page: number;
-        pages: number;
-        limit: number;
+    data: {
+        events: Event[];
+        pagination: Pagination;
     };
 }
 
@@ -46,6 +50,7 @@ export function useEvents(options: UseEventsOptions = {}) {
         status = "published",
         category,
         search,
+        upcoming,
         page = 1,
         limit = 12,
         autoFetch = true,
@@ -54,17 +59,18 @@ export function useEvents(options: UseEventsOptions = {}) {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [pagination, setPagination] = useState<ApiResponse["pagination"]>(undefined);
+    const [pagination, setPagination] = useState<Pagination | undefined>(undefined);
 
     const buildQuery = useCallback(() => {
         const params = new URLSearchParams();
         if (status) params.set("status", status);
         if (category) params.set("category", category);
         if (search) params.set("search", search);
+        if (upcoming && upcoming !== "all") params.set("upcoming", upcoming);
         params.set("page", String(page));
         params.set("limit", String(limit));
         return params.toString();
-    }, [status, category, search, page, limit]);
+    }, [status, category, search, upcoming, page, limit]);
 
     const fetchEvents = useCallback(async () => {
         setLoading(true);
@@ -72,8 +78,8 @@ export function useEvents(options: UseEventsOptions = {}) {
         try {
             const query = buildQuery();
             const res = await api.get<ApiResponse>(`/api/events?${query}`);
-            setEvents(res.data);
-            if (res.pagination) setPagination(res.pagination);
+            setEvents(res.data.events ?? []);
+            if (res.data.pagination) setPagination(res.data.pagination);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to fetch events");
             setEvents([]);
@@ -86,16 +92,10 @@ export function useEvents(options: UseEventsOptions = {}) {
         if (autoFetch) fetchEvents();
     }, [autoFetch, fetchEvents]);
 
-    return {
-        events,
-        loading,
-        error,
-        pagination,
-        refetch: fetchEvents,
-    };
+    return { events, loading, error, pagination, refetch: fetchEvents };
 }
 
-/** Fetch a single event by ID — no auth required */
+/** Single event — no auth required */
 export function useEvent(id: string | null) {
     const [event, setEvent] = useState<Event | null>(null);
     const [loading, setLoading] = useState(false);

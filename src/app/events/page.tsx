@@ -1,26 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
-
-interface Event {
-    _id: string;
-    title: string;
-    description: string;
-    date: string;
-    location: string;
-    category: string;
-    requiredSkills: string[];
-    maxCapacity: number;
-    registeredCount: number;
-    registrationDeadline: string;
-    status: string;
-}
-
-interface ApiResponse {
-    data: { events: Event[]; pagination: { total: number } };
-}
+import { useEvents, Event } from "@/hooks/useEvents";
 
 const CATEGORIES = [
     "All", "Hackathon", "Workshop", "Meetup", "Webinar", "Conference",
@@ -28,38 +10,20 @@ const CATEGORIES = [
 ];
 
 export default function EventsPage() {
-    const [events, setEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
-    const [upcoming, setUpcoming] = useState<string>("true");
+    const [upcoming, setUpcoming] = useState("true");
     const [page, setPage] = useState(1);
-    const [total, setTotal] = useState(0);
 
-    const fetchEvents = useCallback(async () => {
-        setLoading(true);
-        try {
-            const params = new URLSearchParams();
-            if (search) params.set("search", search);
-            if (category !== "All") params.set("category", category);
-            if (upcoming !== "all") params.set("upcoming", upcoming);
-            params.set("status", "published");
-            params.set("page", String(page));
-            params.set("limit", "9");
-            const res = await api.get<ApiResponse>(`/api/events?${params}`);
-            setEvents(res.data.events);
-            setTotal(res.data.pagination.total);
-        } catch {
-            setEvents([]);
-        } finally {
-            setLoading(false);
-        }
-    }, [search, category, upcoming, page]);
+    const { events, loading, pagination } = useEvents({
+        search,
+        category: category === "All" ? undefined : category.toLowerCase(),
+        status: upcoming === "all" ? undefined : "published",
+        page,
+        limit: 9,
+    });
 
-    useEffect(() => {
-        fetchEvents();
-    }, [fetchEvents]);
-
+    const total = pagination?.total ?? 0;
     const availableSlots = (e: Event) => Math.max(0, e.maxCapacity - (e.registeredCount || 0));
     const isFull = (e: Event) => availableSlots(e) === 0;
 
@@ -129,8 +93,7 @@ export default function EventsPage() {
                     </div>
                 ) : (
                     <>
-                        <p className="text-gray-400 text-sm mb-6">{total} event{total !== 1 ? "s" : ""} found</p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <p className="text-gray-400 text-sm mb-6">{total} event{total !== 1 ? "s" : ""} found</p>                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {events.map((event) => (
                                 <Link
                                     href={`/events/${event._id}`}

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useEvents } from '@/hooks/useEvents'
+import GridLines from '@/components/shared/GridLines/GridLines'
 
 const PER_PAGE = 2 // ekbare koyta card dekhabe
 const SEGMENTS = 12 // capacity bar er block shonkha
@@ -95,8 +96,9 @@ export default function EventsPage() {
     }
 
     return (
-        <main className="min-h-screen bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] text-[#6c7686]">
-            <div className="mx-auto max-w-7xl px-6 pb-24 pt-16">
+        <main className="relative min-h-screen bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] text-[#6c7686]">
+            <GridLines/>
+            <div className="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-16">
                 <p className="font-mono text-xs uppercase tracking-widest text-[#2dd4bf]">
                     / Upcoming events
                 </p>

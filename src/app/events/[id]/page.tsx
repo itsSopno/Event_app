@@ -150,7 +150,7 @@ export default function EventDetailPage() {
                 className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#051817] px-4 text-center"
                
             >
-                <p className="font-mono text-xs text-[#d4f542]">{"// 404"}</p>
+                <p className="font-mono text-xs text-[#6c7686]">{"// 404"}</p>
                 <p className="text-3xl font-bold uppercase tracking-tight text-white">Event not found</p>
                 <p className="text-sm text-white/50">It may have been removed or the link is wrong.</p>
                 <button
@@ -243,7 +243,7 @@ export default function EventDetailPage() {
                     <aside className="lg:col-span-1">
                         <div className="sticky top-6">
 
-                            <div className="pb-3 font-mono text-xs text-[#d4f542]">
+                            <div className="pb-3 font-mono text-xs text-[#6c7686]">
                                 {"// registration"}
                             </div>
 

@@ -71,6 +71,33 @@ const EVENT_ITEMS: DropItem[] = [
         imageTitle: 'Workshop',
         imageDesc: 'For freshers learning.',
     },
+    {
+       title:'Meetup',
+       desc:'Connect with other developers', 
+         href:'/event/meetup',
+         icon:UserCircle,
+         image:'https://i.pinimg.com/736x/c4/0f/f3/c40ff31743eca06af5e71525c9a8dc11.jpg',
+         imageTitle:'Meetup',
+         imageDesc:'Connect with other developers and share knowledge.',
+    },
+    {
+        title:'Competition',
+        desc:'Compete with other developers',
+        href:'/event/competition',
+        icon:CodeXml,
+        image:'https://i.pinimg.com/736x/b6/9f/65/b69f65b76418959836700862e08d008e.jpg',
+        imageTitle:'Competition',
+        imageDesc:'Compete with other developers and win prizes.',
+    },
+    {
+        title:'Conference',
+        desc:'Attend conferences and meetups',
+        href:'/event/conference',
+        icon:MonitorPause,
+        image:'https://i.pinimg.com/736x/51/29/07/5129075af0f53791c7563c8151d8d91a.jpg',
+        imageTitle:'Conference',
+        imageDesc:'Attend conferences and meetups to learn from experts.',
+    },
 ]
 
 export default function Navbar() {

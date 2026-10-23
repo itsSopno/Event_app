@@ -45,6 +45,37 @@ interface AiResult {
     promotional: string;
 }
 
+const LIME = "#d6f53c";
+
+const inputCls =
+    "w-full bg-[#0a2523]/70 border border-[#6fe0c8]/15 rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#d6f53c] transition";
+
+function Section({ tag, hint, children }: { tag: string; hint: string; children: React.ReactNode }) {
+    return (
+        <section className="bg-[#14100f] border border-white/5 rounded-2xl p-6">
+            <div className="mb-5 pb-4 border-b border-white/5">
+                <p className="text-xs" style={{ color: LIME }}>
+                    <span className="opacity-60">//</span> {tag}
+                </p>
+                <p className="text-gray-500 text-xs mt-1">{hint}</p>
+            </div>
+            {children}
+        </section>
+    );
+}
+
+function Field({ label, required, className = "", children }: { label: string; required?: boolean; className?: string; children: React.ReactNode }) {
+    return (
+        <label className={`block ${className}`}>
+            <span className="block text-[11px] text-gray-400 mb-1.5">
+                {label}
+                {required && <span style={{ color: LIME }}> *</span>}
+            </span>
+            {children}
+        </label>
+    );
+}
+
 export default function CreateEventPage() {
     const { user, loading } = useAuth();
     const router = useRouter();
@@ -146,241 +177,251 @@ export default function CreateEventPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#051817] text-white">
-            <div className="max-w-3xl mx-auto px-4 py-10">
+        <div className="min-h-screen bg-[#051817] text-white font-mono">
+            <div className="max-w-3xl mx-auto px-4 py-12 border-x border-dashed border-[#6fe0c8]/15">
                 <button
                     onClick={() => router.back()}
-                    className="text-gray-400 hover:text-[#4eca8b] transition mb-6 flex items-center gap-1"
+                    className="text-xs text-gray-400 hover:text-[#6c7686] transition mb-8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#6c7686] rounded"
                 >
                     ← Back
                 </button>
-                <p className="text-[#4eca8b] font-mono text-sm mb-1">
-                    <span className="opacity-60">//</span> Organizer
+
+                <p className="text-[11px] mb-3" style={{ color: LIME }}>
+                    <span className="opacity-60">//</span> organizer
                 </p>
-                <h1 className="text-3xl font-bold mb-8">Create New Event</h1>
+                <h1 className="font-sans text-5xl md:text-6xl font-black leading-[0.95] tracking-tight bg-gradient-to-b from-[#9bb3b0] to-[#4a6664] bg-clip-text text-transparent mb-10">
+                    Create
+                    <br />
+                    new event
+                </h1>
 
                 {/* AI Assistant */}
-                <div className="bg-gradient-to-br from-[#0a2a27] to-[#071f1e] border border-[#4eca8b]/30 rounded-xl p-6 mb-8">
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xl">✨</span>
-                        <h2 className="text-lg font-semibold text-[#4eca8b]">AI Event Description Assistant</h2>
-                    </div>
-                    <p className="text-gray-400 text-sm mb-4">
-                        Describe your event idea and AI will generate a description, skills, and promotional message.
+                <div className="relative bg-[#14100f] border border-[#d6f53c]/30 rounded-2xl p-6 mb-6">
+                    <p className="text-xs mb-1" style={{ color: LIME }}>
+                        <span className="opacity-60">//</span> ai_assistant
                     </p>
-                    <div className="flex gap-3">
+                    <h2 className="font-sans text-xl font-semibold mb-1">Draft with AI</h2>
+                    <p className="text-gray-400 text-xs mb-4 leading-relaxed">
+                        Describe your idea in one line. We fill in the description and required skills, and write a promo message.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3">
                         <input
                             type="text"
                             value={aiIdea}
                             onChange={(e) => setAiIdea(e.target.value)}
-                            placeholder="e.g. We want to organize a coding bootcamp for beginners"
-                            className="flex-1 bg-[#051817] border border-[#0d3330] rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-[#4eca8b] transition text-sm"
+                            placeholder="e.g. A coding bootcamp for beginners"
+                            className={inputCls}
                         />
                         <button
                             type="button"
                             onClick={handleAI}
                             disabled={aiLoading || !aiIdea.trim()}
-                            className="bg-[#4eca8b] hover:bg-[#3db87a] text-[#051817] font-semibold px-4 py-2.5 rounded-lg transition disabled:opacity-60 text-sm whitespace-nowrap"
+                            className="text-[#051817] font-bold px-5 py-3 rounded-lg transition disabled:opacity-50 text-xs whitespace-nowrap hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d6f53c]"
+                            style={{ background: LIME }}
                         >
-                            {aiLoading ? "Generating…" : "Generate ✨"}
+                            {aiLoading ? "Generating…" : "Generate draft"}
                         </button>
                     </div>
 
                     {aiResult && (
-                        <div className="mt-5 space-y-3 text-sm">
-                            <div className="bg-[#051817] rounded-lg p-4 border border-[#0d3330]">
-                                <p className="text-gray-400 text-xs mb-1">📝 Description</p>
-                                <p className="text-gray-200">{aiResult.description}</p>
+                        <div className="mt-6 space-y-3 text-xs">
+                            <div className="rounded-lg p-4 border border-white/5 bg-[#0a2523]/50">
+                                <p className="text-gray-500 mb-1.5">// description</p>
+                                <p className="text-gray-200 leading-relaxed">{aiResult.description}</p>
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-[#051817] rounded-lg p-4 border border-[#0d3330]">
-                                    <p className="text-gray-400 text-xs mb-2">🎭 Suggested Roles</p>
-                                    <ul className="space-y-1">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div className="rounded-lg p-4 border border-white/5 bg-[#0a2523]/50">
+                                    <p className="text-gray-500 mb-2">// suggested_roles</p>
+                                    <div className="flex flex-wrap gap-1.5">
                                         {aiResult.roles?.map((r) => (
-                                            <li key={r} className="text-gray-300 flex items-center gap-1.5">
-                                                <span className="text-[#4eca8b] text-xs">→</span>{r}
-                                            </li>
+                                            <span key={r} className="px-2.5 py-1 rounded-full border border-[#6fe0c8]/20 text-gray-300">{r}</span>
                                         ))}
-                                    </ul>
+                                    </div>
                                 </div>
-                                <div className="bg-[#051817] rounded-lg p-4 border border-[#0d3330]">
-                                    <p className="text-gray-400 text-xs mb-2">🛠️ Required Skills</p>
-                                    <ul className="space-y-1">
+                                <div className="rounded-lg p-4 border border-white/5 bg-[#0a2523]/50">
+                                    <p className="text-gray-500 mb-2">// required_skills</p>
+                                    <div className="flex flex-wrap gap-1.5">
                                         {aiResult.skills?.map((s) => (
-                                            <li key={s} className="text-gray-300 flex items-center gap-1.5">
-                                                <span className="text-[#4eca8b] text-xs">→</span>{s}
-                                            </li>
+                                            <span key={s} className="px-2.5 py-1 rounded-full border border-[#6fe0c8]/20 text-gray-300">{s}</span>
                                         ))}
-                                    </ul>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="bg-[#051817] rounded-lg p-4 border border-[#0d3330]">
-                                <p className="text-gray-400 text-xs mb-1">📣 Promotional Message</p>
-                                <p className="text-gray-200 italic">"{aiResult.promotional}"</p>
+                            <div className="rounded-lg p-4 border border-white/5 bg-[#0a2523]/50">
+                                <p className="text-gray-500 mb-1.5">// promo_message</p>
+                                <p className="text-gray-200 leading-relaxed">{aiResult.promotional}</p>
                             </div>
-                            <p className="text-[#4eca8b] text-xs">↑ Fields auto-filled. Review and edit below before publishing.</p>
+                            <p style={{ color: LIME }}>Description and skills are filled in below. Review them before you publish.</p>
                         </div>
                     )}
                 </div>
 
                 {/* Form */}
-                <form className="space-y-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div className="md:col-span-2">
-                            <label className="block text-sm text-gray-300 mb-1.5">Event Title *</label>
-                            <input
-                                type="text"
-                                required
-                                value={form.title}
-                                onChange={(e) => set("title", e.target.value)}
-                                placeholder="Dhaka Hackathon 2026"
-                                className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#4eca8b] transition"
-                            />
+                <form className="space-y-6">
+                    <Section tag="basics" hint="What the event is called and what it is about.">
+                        <div className="grid grid-cols-1 gap-5">
+                            <Field label="Event title" required>
+                                <input
+                                    type="text"
+                                    required
+                                    value={form.title}
+                                    onChange={(e) => set("title", e.target.value)}
+                                    placeholder="Dhaka Hackathon 2026"
+                                    className={inputCls}
+                                />
+                            </Field>
+                            <Field label="Description" required>
+                                <textarea
+                                    required
+                                    rows={5}
+                                    value={form.description}
+                                    onChange={(e) => set("description", e.target.value)}
+                                    placeholder="What will people do, learn or build?"
+                                    className={`${inputCls} resize-none leading-relaxed`}
+                                />
+                            </Field>
+                            <Field label="Category" required>
+                                <select
+                                    value={form.category}
+                                    onChange={(e) => set("category", e.target.value)}
+                                    className={inputCls}
+                                >
+                                    {CATEGORIES.map((c) => (
+                                        <option key={c.value} value={c.value}>{c.label}</option>
+                                    ))}
+                                </select>
+                            </Field>
                         </div>
+                    </Section>
 
-                        <div className="md:col-span-2">
-                            <label className="block text-sm text-gray-300 mb-1.5">Description *</label>
-                            <textarea
-                                required
-                                rows={5}
-                                value={form.description}
-                                onChange={(e) => set("description", e.target.value)}
-                                placeholder="Describe your event..."
-                                className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#4eca8b] transition resize-none"
-                            />
+                    <Section tag="schedule" hint="When and where it happens.">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <Field label="Event date" required>
+                                <input
+                                    type="datetime-local"
+                                    required
+                                    value={form.date}
+                                    onChange={(e) => set("date", e.target.value)}
+                                    className={`${inputCls} [color-scheme:dark]`}
+                                />
+                            </Field>
+                            <Field label="Registration deadline" required>
+                                <input
+                                    type="datetime-local"
+                                    required
+                                    value={form.registrationDeadline}
+                                    onChange={(e) => set("registrationDeadline", e.target.value)}
+                                    className={`${inputCls} [color-scheme:dark]`}
+                                />
+                            </Field>
+                            <Field label="Location" required className="md:col-span-2">
+                                <input
+                                    type="text"
+                                    required
+                                    value={form.location}
+                                    onChange={(e) => set("location", e.target.value)}
+                                    placeholder="Dhaka, Bangladesh"
+                                    className={inputCls}
+                                />
+                            </Field>
                         </div>
+                    </Section>
 
-                        <div>
-                            <label className="block text-sm text-gray-300 mb-1.5">Event Date *</label>
-                            <input
-                                type="datetime-local"
-                                required
-                                value={form.date}
-                                onChange={(e) => set("date", e.target.value)}
-                                className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4eca8b] transition"
-                            />
+                    <Section tag="volunteers" hint="How many people you need and what they should know.">
+                        <div className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-5">
+                            <Field label="Max capacity" required>
+                                <input
+                                    type="number"
+                                    min={1}
+                                    required
+                                    value={form.maxCapacity}
+                                    onChange={(e) => set("maxCapacity", parseInt(e.target.value))}
+                                    className={inputCls}
+                                />
+                            </Field>
+                            <Field label="Required skills, separated by commas">
+                                <input
+                                    type="text"
+                                    value={form.requiredSkills}
+                                    onChange={(e) => set("requiredSkills", e.target.value)}
+                                    placeholder="React, Node.js, Communication"
+                                    className={inputCls}
+                                />
+                            </Field>
                         </div>
+                    </Section>
 
-                        <div>
-                            <label className="block text-sm text-gray-300 mb-1.5">Registration Deadline *</label>
-                            <input
-                                type="datetime-local"
-                                required
-                                value={form.registrationDeadline}
-                                onChange={(e) => set("registrationDeadline", e.target.value)}
-                                className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4eca8b] transition"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm text-gray-300 mb-1.5">Location *</label>
-                            <input
-                                type="text"
-                                required
-                                value={form.location}
-                                onChange={(e) => set("location", e.target.value)}
-                                placeholder="Dhaka, Bangladesh"
-                                className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#4eca8b] transition"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm text-gray-300 mb-1.5">Category *</label>
-                            <select
-                                value={form.category}
-                                onChange={(e) => set("category", e.target.value)}
-                                className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4eca8b] transition"
-                            >
-                                {CATEGORIES.map((c) => (
-                                    <option key={c.value} value={c.value}>{c.label}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm text-gray-300 mb-1.5">Max Volunteer Capacity *</label>
-                            <input
-                                type="number"
-                                min={1}
-                                required
-                                value={form.maxCapacity}
-                                onChange={(e) => set("maxCapacity", parseInt(e.target.value))}
-                                className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#4eca8b] transition"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm text-gray-300 mb-1.5">Required Skills (comma separated)</label>
-                            <input
-                                type="text"
-                                value={form.requiredSkills}
-                                onChange={(e) => set("requiredSkills", e.target.value)}
-                                placeholder="React, Node.js, Communication"
-                                className="w-full bg-[#071f1e] border border-[#0d3330] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#4eca8b] transition"
-                            />
-                        </div>
-
-                        {/* Event Banner Image */}
-                        <div className="md:col-span-2">
-                            <label className="block text-sm text-gray-300 mb-1.5">Event Banner Image</label>
-                            <div
-                                onClick={() => imageRef.current?.click()}
-                                className={`relative w-full h-44 rounded-xl border-2 border-dashed cursor-pointer overflow-hidden flex items-center justify-center transition ${
-                                    imagePreview ? "border-[#4eca8b]" : "border-[#0d3330] hover:border-[#4eca8b]/60"
-                                } bg-[#071f1e]`}
-                            >
-                                {imagePreview ? (
-                                    <Image src={imagePreview} alt="event banner" fill className="object-cover" />
-                                ) : (
-                                    <div className="text-center text-gray-500">
-                                        <span className="text-4xl block mb-2">🖼️</span>
-                                        <span className="text-sm">Click to upload banner image</span>
-                                        <span className="text-xs block mt-1 opacity-60">PNG, JPG, WEBP up to 10MB</span>
-                                    </div>
-                                )}
-                                {imageUploading && (
-                                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                        <span className="text-[#4eca8b] animate-pulse font-medium">Uploading…</span>
-                                    </div>
-                                )}
-                                {imagePreview && !imageUploading && (
-                                    <div className="absolute bottom-2 right-2 bg-black/60 text-[#4eca8b] text-xs px-2 py-1 rounded-lg">
-                                        ✓ Uploaded — click to change
-                                    </div>
-                                )}
-                            </div>
-                            <input
-                                ref={imageRef}
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={handleImageChange}
-                            />
-                        </div>
-                    </div>
+                    <Section tag="banner" hint="Shown at the top of your event page.">
+                        <button
+                            type="button"
+                            onClick={() => imageRef.current?.click()}
+                            className={`relative w-full h-48 rounded-xl border border-dashed overflow-hidden flex items-center justify-center transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d6f53c] ${imagePreview ? "border-[#d6f53c]" : "border-[#6fe0c8]/25 hover:border-[#d6f53c]/70"
+                                }`}
+                            style={
+                                imagePreview
+                                    ? undefined
+                                    : {
+                                        backgroundColor: "#0a2523",
+                                        backgroundImage:
+                                            "linear-gradient(rgba(111,224,200,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(111,224,200,.1) 1px, transparent 1px)",
+                                        backgroundSize: "28px 28px",
+                                    }
+                            }
+                        >
+                            {imagePreview ? (
+                                <Image src={imagePreview} alt="Event banner preview" fill className="object-cover" />
+                            ) : (
+                                <div className="text-center">
+                                    <span className="block text-sm text-gray-200">Upload a banner image</span>
+                                    <span className="block text-[11px] text-gray-500 mt-1">PNG, JPG or WEBP, up to 10 MB</span>
+                                </div>
+                            )}
+                            {imageUploading && (
+                                <div className="absolute inset-0 bg-[#051817]/80 flex items-center justify-center">
+                                    <span className="animate-pulse text-xs" style={{ color: LIME }}>Uploading…</span>
+                                </div>
+                            )}
+                            {imagePreview && !imageUploading && (
+                                <span
+                                    className="absolute bottom-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded text-[#051817]"
+                                    style={{ background: LIME }}
+                                >
+                                    Uploaded. Click to replace
+                                </span>
+                            )}
+                        </button>
+                        <input
+                            ref={imageRef}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleImageChange}
+                        />
+                    </Section>
 
                     {error && (
-                        <p className="text-red-400 text-sm bg-red-900/20 border border-red-800 rounded-lg px-4 py-3">
+                        <p role="alert" className="text-red-300 text-xs bg-red-900/20 border border-red-800/60 rounded-lg px-4 py-3">
                             {error}
                         </p>
                     )}
 
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3 pt-2">
                         <button
                             type="button"
                             onClick={(e) => handleSubmit(e, "draft")}
                             disabled={submitting || imageUploading}
-                            className="flex-1 py-3 rounded-lg border border-[#0d3330] text-gray-300 hover:border-[#4eca8b] transition disabled:opacity-60"
+                            className="flex-1 py-3 rounded-full border border-[#6fe0c8]/25 text-xs text-gray-200 hover:border-[#6c7686] transition disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d6f53c]"
                         >
-                            Save as Draft
+                            Save as draft
                         </button>
                         <button
                             type="button"
                             onClick={(e) => handleSubmit(e, "published")}
                             disabled={submitting || imageUploading}
-                            className="flex-1 py-3 rounded-lg bg-[#4eca8b] text-[#051817] font-semibold hover:bg-[#3db87a] transition disabled:opacity-60"
+                            className="flex-1 py-3 rounded-full text-xs font-bold text-[#051817] hover:brightness-110 transition disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d6f53c]"
+                            style={{ background: LIME }}
                         >
-                            {submitting ? "Publishing…" : "Publish Event →"}
+                            {submitting ? "Publishing…" : "Publish event"}
                         </button>
                     </div>
                 </form>

@@ -116,7 +116,7 @@ export default function Navbar() {
             <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
                 {/* Brand */}
                 <Link href="/" className="text-xl font-bold tracking-tight">
-                    Sinners_Coding
+                    Sinners Coding
                 </Link>
 
                 {/* Desktop menu */}

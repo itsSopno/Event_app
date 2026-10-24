@@ -59,7 +59,7 @@ export default function Footer() {
                 </div>
             </nav>
             <aside>
-                <p>Copyright ©2026 - All right reserved by ACME Industries Ltd</p>
+                <p>Copyright ©2026 - All right reserved by Studio Sinners Ltd</p>
             </aside>
         </footer>
     )

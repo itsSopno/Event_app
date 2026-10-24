@@ -32,10 +32,10 @@ function EventVolunteersContent() {
             try {
                 const [evRes, volRes] = await Promise.all([
                     api.get<{ data: { title: string } }>(`/api/events/${id}`),
-                    api.get<{ data: Volunteer[] }>(`/api/registrations/event/${id}`),
+                    api.get<{ data: { event: { title: string }; registrations: Volunteer[] } }>(`/api/registrations/events/${id}/registrations`),
                 ]);
                 setEventTitle(evRes.data.title);
-                setVolunteers(volRes.data);
+                setVolunteers(volRes.data.registrations ?? []);
             } catch {
                 setVolunteers([]);
             } finally {

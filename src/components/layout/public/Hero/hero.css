@@ -23,7 +23,7 @@
   flex-direction: column;
   min-height: 100vh;
   min-height: calc(100svh - var(--nav-h, 0px));
-  background: radial-gradient(ellipse at 75% 30%, #0a2a28 0%, transparent 60%), var(--h-bg);
+  /* background: radial-gradient(ellipse at 75% 30%, #0a2a28 0%, transparent 60%), var(--h-bg); */
   color: var(--h-ink);
   font-family: var(--h-font);
   overflow: hidden;

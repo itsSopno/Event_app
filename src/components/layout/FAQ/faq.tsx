@@ -97,12 +97,12 @@ const FAQS: FaqItem[] = [
     },
 ];
 
-/* Dark button with an outlined arrow box, same as the other pages */
+/* Lime button with a dark arrow box, same as the About, Contact and Footer */
 function ArrowButtonInner({ children }: { children: React.ReactNode }) {
     return (
         <>
             <span className="text-[15px] font-medium">{children}</span>
-            <span className="flex h-10 w-10 items-center justify-center border border-white">
+            <span className="flex h-10 w-10 items-center justify-center bg-[#041414] text-[#dfee3b]">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
@@ -112,7 +112,7 @@ function ArrowButtonInner({ children }: { children: React.ReactNode }) {
 }
 
 const btnCls =
-    "inline-flex h-12 items-center justify-between gap-10 bg-[#041414] pl-4 pr-1 text-white transition hover:bg-black";
+    "inline-flex h-12 items-center justify-between gap-10 bg-[#dfee3b] pl-4 pr-1 text-[#041414] transition hover:brightness-95";
 
 export default function FaqPage() {
     const rootRef = useRef<HTMLElement>(null);
@@ -204,12 +204,12 @@ export default function FaqPage() {
     };
 
     return (
-        <main ref={rootRef} className="relative min-h-screen bg-white text-[#041414]">
+        <main ref={rootRef} className="relative min-h-screen text-white">
             <div className="relative mx-auto max-w-6xl px-4">
                 {/* Vertical column lines */}
                 <div aria-hidden className="pointer-events-none absolute inset-y-0 left-4 right-4 hidden grid-cols-5 lg:grid">
                     {[0, 1, 2, 3, 4].map((i) => (
-                        <div key={i} className={`border-l border-[#041414]/[0.07] ${i === 4 ? "border-r" : ""}`} />
+                        <div key={i} className={`border-l border-white/[0.07] ${i === 4 ? "border-r" : ""}`} />
                     ))}
                 </div>
 
@@ -217,7 +217,7 @@ export default function FaqPage() {
                     {/* ───────── Hero ───────── */}
                     <div className="grid gap-8 pb-16 pt-16 md:pt-24 lg:grid-cols-5 lg:gap-0">
                         <p className="faq-fade text-lg font-medium lg:pl-4">
-                            <span className="italic">//</span> FAQ
+                            <span className="italic text-[#dfee3b]">//</span> FAQ
                         </p>
 
                         <div className="lg:col-span-4 lg:pr-4">
@@ -232,7 +232,7 @@ export default function FaqPage() {
                             </h1>
 
                             <div className="mt-8 flex flex-col justify-between gap-8 md:flex-row md:items-end">
-                                <p className="faq-fade max-w-md text-lg leading-snug text-[#041414]/70">
+                                <p className="faq-fade max-w-md text-lg leading-snug text-white/70">
                                     Everything about joining events, applying as a volunteer and
                                     running your own.
                                 </p>
@@ -244,7 +244,7 @@ export default function FaqPage() {
                     </div>
 
                     {/* ───────── Categories + accordion ───────── */}
-                    <div className="grid gap-10 border-t border-[#041414]/10 pb-24 pt-14 lg:grid-cols-5 lg:gap-0">
+                    <div className="grid gap-10 border-t border-white/10 pb-24 pt-14 lg:grid-cols-5 lg:gap-0">
                         {/* Category tabs */}
                         <nav
                             aria-label="FAQ categories"
@@ -260,14 +260,14 @@ export default function FaqPage() {
                                         aria-pressed={active}
                                         className={`faq-cat flex items-center justify-between gap-4 border px-4 py-2.5 text-left text-sm transition ${
                                             active
-                                                ? "border-[#041414] bg-[#041414] text-white"
-                                                : "border-[#041414]/20 text-[#041414]/80 hover:border-[#041414]"
+                                                ? "border-[#dfee3b] bg-[#dfee3b] font-medium text-[#041414]"
+                                                : "border-white/20 text-white/80 hover:border-white"
                                         }`}
                                     >
                                         <span>{c.label}</span>
                                         <span
                                             className={`flex h-5 min-w-5 items-center justify-center px-1 text-xs ${
-                                                active ? "bg-[#dfee3b] text-[#041414]" : "bg-[#041414]/[0.06] text-[#041414]/60"
+                                                active ? "bg-[#041414] text-[#dfee3b]" : "bg-white/10 text-white/60"
                                             }`}
                                         >
                                             {count}
@@ -280,16 +280,16 @@ export default function FaqPage() {
                         {/* Accordion */}
                         <section className="lg:col-span-4 lg:pr-4">
                             <p className="mb-6 text-lg font-medium">
-                                <span className="italic">//</span> {activeLabel}
+                                <span className="italic text-[#dfee3b]">//</span> {activeLabel}
                             </p>
 
-                            <div ref={listRef} className="border-t border-[#041414]/10">
+                            <div ref={listRef} className="border-t border-white/10">
                                 {items.map((item) => {
                                     const isOpen = item.id === openId;
                                     return (
                                         <div
                                             key={item.id}
-                                            className={`faq-item border-b border-l-4 border-b-[#041414]/10 transition-colors duration-300 ${
+                                            className={`faq-item border-b border-l-4 border-b-white/10 transition-colors duration-300 ${
                                                 isOpen
                                                     ? "border-l-[#dfee3b] bg-[#dfee3b]/10"
                                                     : "border-l-transparent"
@@ -303,7 +303,7 @@ export default function FaqPage() {
                                                     id={`trigger-${item.id}`}
                                                     className="group flex w-full items-center justify-between gap-6 px-4 py-6 text-left sm:px-6"
                                                 >
-                                                    <span className="text-xl font-semibold tracking-tight sm:text-2xl md:text-3xl">
+                                                    <span className="text-xl font-semibold tracking-tight text-white sm:text-2xl md:text-3xl">
                                                         {item.q}
                                                     </span>
                                                     <span
@@ -313,8 +313,8 @@ export default function FaqPage() {
                                                         aria-hidden
                                                         className={`flex h-10 w-10 shrink-0 items-center justify-center border text-2xl font-light leading-none transition-colors duration-300 ${
                                                             isOpen
-                                                                ? "border-[#041414] bg-[#041414] text-[#dfee3b]"
-                                                                : "border-[#041414]/25 text-[#041414] group-hover:border-[#041414] group-hover:bg-[#dfee3b]"
+                                                                ? "border-[#dfee3b] bg-[#dfee3b] text-[#041414]"
+                                                                : "border-white/25 text-white group-hover:border-[#dfee3b] group-hover:bg-[#dfee3b] group-hover:text-[#041414]"
                                                         }`}
                                                     >
                                                         +
@@ -331,7 +331,7 @@ export default function FaqPage() {
                                                 }}
                                                 className="h-0 overflow-hidden"
                                             >
-                                                <p className="max-w-2xl px-4 pb-7 pr-16 text-[17px] leading-relaxed text-[#041414]/75 sm:px-6 sm:pr-20">
+                                                <p className="max-w-2xl px-4 pb-7 pr-16 text-[17px] leading-relaxed text-white/75 sm:px-6 sm:pr-20">
                                                     {item.a}
                                                 </p>
                                             </div>
@@ -340,11 +340,11 @@ export default function FaqPage() {
                                 })}
                             </div>
 
-                            <p className="mt-10 text-[15px] text-[#041414]/60">
+                            <p className="mt-10 text-[15px] text-white/60">
                                 Still stuck?{" "}
                                 <Link
                                     href="/contact"
-                                    className="font-medium text-[#041414] underline decoration-[#dfee3b] decoration-2 underline-offset-4"
+                                    className="font-medium text-white underline decoration-[#dfee3b] decoration-2 underline-offset-4"
                                 >
                                     Send us a message
                                 </Link>{" "}

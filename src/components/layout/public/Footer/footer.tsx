@@ -183,7 +183,7 @@ export default function Footer() {
     return (
         <footer
             ref={rootRef}
-            className="relative overflow-hidden bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_20%,#0a2a28_0%,transparent_60%)] text-white"
+            className="relative overflow-hidden bg-[#051817] text-white"
         >
             {/* ───────── Marquee strip ───────── */}
             <div aria-hidden className="ft-marquee overflow-hidden bg-[#dfee3b] py-4 text-[#041414]">

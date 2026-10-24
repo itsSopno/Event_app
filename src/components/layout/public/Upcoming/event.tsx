@@ -96,7 +96,7 @@ export default function EventsPage() {
     }
 
     return (
-        <main className="relative min-h-screen bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] text-[#6c7686]">
+        <main className="relative min-h-screen text-[#6c7686]">
             <GridLines/>
             <div className="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-16">
                 <p className="font-mono text-xs uppercase tracking-widest text-[#2dd4bf]">

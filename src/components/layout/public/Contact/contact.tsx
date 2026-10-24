@@ -19,7 +19,7 @@ const TOPICS = [
 ];
 
 const inputCls =
-    "w-full bg-white border border-[#041414]/20 px-4 py-3 text-sm text-[#041414] placeholder-[#041414]/40 focus:outline-none focus:border-[#041414] focus:ring-2 focus:ring-[#dfee3b] transition";
+    "w-full bg-white/5 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#dfee3b] focus:ring-1 focus:ring-[#dfee3b]/60 transition";
 
 const Icon = {
     mail: (
@@ -61,12 +61,12 @@ const CONTACTS = [
     { icon: Icon.clock, label: "Hours", value: "Sun–Thu, 10am–6pm (GMT+6)" },
 ];
 
-/* Dark button with an outlined arrow box, like the reference */
+/* Lime button with a dark arrow box, same as the About section */
 function ArrowButtonInner({ children }: { children: React.ReactNode }) {
     return (
         <>
             <span className="text-[15px] font-medium">{children}</span>
-            <span className="flex h-10 w-10 items-center justify-center border border-white">
+            <span className="flex h-10 w-10 items-center justify-center bg-[#041414] text-[#dfee3b]">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
@@ -76,7 +76,7 @@ function ArrowButtonInner({ children }: { children: React.ReactNode }) {
 }
 
 const btnCls =
-    "inline-flex h-12 items-center justify-between gap-10 bg-[#041414] pl-4 pr-1 text-white transition hover:bg-black disabled:opacity-60";
+    "inline-flex h-12 items-center justify-between gap-10 bg-[#dfee3b] pl-4 pr-1 text-[#041414] transition hover:brightness-95 disabled:opacity-60";
 
 export default function ContactPage() {
     const { user: authUser } = useAuth();
@@ -178,12 +178,12 @@ export default function ContactPage() {
     };
 
     return (
-        <main ref={rootRef} className="relative min-h-screen bg-white text-[#041414]">
+        <main ref={rootRef} className="relative min-h-screen text-white">
             <div className="relative mx-auto max-w-6xl px-4">
-                {/* Vertical column lines, like the reference */}
+                {/* Vertical column lines */}
                 <div aria-hidden className="pointer-events-none absolute inset-y-0 left-4 right-4 hidden grid-cols-5 lg:grid">
                     {[0, 1, 2, 3, 4].map((i) => (
-                        <div key={i} className={`border-l border-[#041414]/[0.07] ${i === 4 ? "border-r" : ""}`} />
+                        <div key={i} className={`border-l border-white/[0.07] ${i === 4 ? "border-r" : ""}`} />
                     ))}
                 </div>
 
@@ -191,7 +191,7 @@ export default function ContactPage() {
                     {/* ───────── Hero ───────── */}
                     <div className="grid gap-8 pb-16 pt-16 md:pt-24 lg:grid-cols-5 lg:gap-0">
                         <p className="ct-fade text-lg font-medium lg:pl-4">
-                            <span className="italic">//</span> Contact
+                            <span className="italic text-[#dfee3b]">//</span> Contact
                         </p>
 
                         <div className="lg:col-span-4 lg:pr-4">
@@ -208,7 +208,7 @@ export default function ContactPage() {
                             </h1>
 
                             <div className="mt-8 flex flex-col justify-between gap-8 md:flex-row md:items-end">
-                                <p className="ct-fade max-w-md text-lg leading-snug text-[#041414]/70">
+                                <p className="ct-fade max-w-md text-lg leading-snug text-white/70">
                                     Questions about an event, trouble with your account or an idea for
                                     the platform. A real person will reply, usually within one working day.
                                 </p>
@@ -220,9 +220,9 @@ export default function ContactPage() {
                     </div>
 
                     {/* ───────── 01: Reach us ───────── */}
-                    <div className="grid gap-8 border-t border-[#041414]/10 py-14 lg:grid-cols-5 lg:gap-0">
+                    <div className="grid gap-8 border-t border-white/10 py-14 lg:grid-cols-5 lg:gap-0">
                         <p className="text-lg font-medium lg:pl-4">
-                            <span className="italic">//</span> 01
+                            <span className="italic text-[#dfee3b]">//</span> 01
                         </p>
 
                         <div className="lg:col-span-4 lg:pr-4">
@@ -236,8 +236,8 @@ export default function ContactPage() {
                                                 {c.icon}
                                             </span>
                                             <span className="min-w-0">
-                                                <span className="block text-sm text-[#041414]/55">{c.label}</span>
-                                                <span className="block break-words text-xl font-semibold tracking-tight">
+                                                <span className="block text-sm text-white/55">{c.label}</span>
+                                                <span className="block break-words text-xl font-semibold tracking-tight text-white">
                                                     {c.value}
                                                 </span>
                                             </span>
@@ -260,11 +260,11 @@ export default function ContactPage() {
                                 })}
                             </ul>
 
-                            <p className="mt-10 text-[15px] text-[#041414]/60">
+                            <p className="mt-10 text-[15px] text-white/60">
                                 Looking for a quick answer? Check the{" "}
                                 <Link
                                     href="/faq"
-                                    className="font-medium text-[#041414] underline decoration-[#dfee3b] decoration-2 underline-offset-4"
+                                    className="font-medium text-white underline decoration-[#dfee3b] decoration-2 underline-offset-4"
                                 >
                                     FAQ
                                 </Link>{" "}
@@ -274,9 +274,9 @@ export default function ContactPage() {
                     </div>
 
                     {/* ───────── 02: Form ───────── */}
-                    <div className="grid gap-8 border-t border-[#041414]/10 pb-24 pt-14 lg:grid-cols-5 lg:gap-0">
+                    <div className="grid gap-8 border-t border-white/10 pb-24 pt-14 lg:grid-cols-5 lg:gap-0">
                         <p className="text-lg font-medium lg:pl-4">
-                            <span className="italic">//</span> 02
+                            <span className="italic text-[#dfee3b]">//</span> 02
                         </p>
 
                         <div className="lg:col-span-4 lg:pr-4">
@@ -284,20 +284,20 @@ export default function ContactPage() {
 
                             <div className="ct-form mt-10 max-w-2xl">
                                 {sent ? (
-                                    <div className="border border-[#041414]/15 bg-white p-8 sm:p-10">
+                                    <div className="border border-white/15 bg-white/[0.04] p-8 sm:p-10">
                                         <div className="ct-ok-ring flex h-16 w-16 items-center justify-center bg-[#dfee3b] text-[#041414]">
                                             {Icon.check}
                                         </div>
                                         <h3 className="ct-ok-text mt-6 text-3xl font-bold tracking-tighter">Message sent</h3>
-                                        <p className="ct-ok-text mt-2 max-w-md text-[15px] text-[#041414]/70">
+                                        <p className="ct-ok-text mt-2 max-w-md text-[15px] text-white/70">
                                             Thanks, {name.split(" ")[0] || "friend"}. We will reply to{" "}
-                                            <span className="font-medium text-[#041414]">{email}</span> within one
+                                            <span className="font-medium text-white">{email}</span> within one
                                             working day.
                                         </p>
                                         <div className="ct-ok-text mt-7 flex flex-col gap-3 sm:flex-row">
                                             <button
                                                 onClick={resetForm}
-                                                className="h-12 border border-[#041414]/25 px-5 text-[15px] font-medium transition hover:border-[#041414]"
+                                                className="h-12 border border-white/25 px-5 text-[15px] font-medium text-white transition hover:border-[#dfee3b]"
                                             >
                                                 Send another message
                                             </button>
@@ -310,7 +310,7 @@ export default function ContactPage() {
                                     <form onSubmit={handleSubmit} className="space-y-7">
                                         {/* Topic chips */}
                                         <fieldset>
-                                            <legend className="mb-3 text-sm font-medium">What is this about?</legend>
+                                            <legend className="mb-3 text-sm font-medium text-white">What is this about?</legend>
                                             <div className="flex flex-wrap gap-2">
                                                 {TOPICS.map((t) => {
                                                     const active = t === topic;
@@ -322,8 +322,8 @@ export default function ContactPage() {
                                                             aria-pressed={active}
                                                             className={`border px-4 py-2 text-sm transition ${
                                                                 active
-                                                                    ? "border-[#041414] bg-[#041414] text-white"
-                                                                    : "border-[#041414]/20 text-[#041414]/80 hover:border-[#041414]"
+                                                                    ? "border-[#dfee3b] bg-[#dfee3b] font-medium text-[#041414]"
+                                                                    : "border-white/20 text-white/80 hover:border-white"
                                                             }`}
                                                         >
                                                             {t}
@@ -335,7 +335,7 @@ export default function ContactPage() {
 
                                         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                                             <div>
-                                                <label htmlFor="ct-name" className="mb-1.5 block text-sm font-medium">
+                                                <label htmlFor="ct-name" className="mb-1.5 block text-sm font-medium text-white">
                                                     Your name
                                                 </label>
                                                 <input
@@ -350,7 +350,7 @@ export default function ContactPage() {
                                                 />
                                             </div>
                                             <div>
-                                                <label htmlFor="ct-email" className="mb-1.5 block text-sm font-medium">
+                                                <label htmlFor="ct-email" className="mb-1.5 block text-sm font-medium text-white">
                                                     Email
                                                 </label>
                                                 <input
@@ -367,7 +367,7 @@ export default function ContactPage() {
                                         </div>
 
                                         <div>
-                                            <label htmlFor="ct-message" className="mb-1.5 block text-sm font-medium">
+                                            <label htmlFor="ct-message" className="mb-1.5 block text-sm font-medium text-white">
                                                 Message
                                             </label>
                                             <textarea
@@ -381,7 +381,7 @@ export default function ContactPage() {
                                                 placeholder="Tell us what you need help with. Include the event name if it is about a specific event."
                                                 className={`${inputCls} resize-none`}
                                             />
-                                            <p className="mt-1 text-right text-xs text-[#041414]/50">{message.length}/1000</p>
+                                            <p className="mt-1 text-right text-xs text-white/50">{message.length}/1000</p>
                                         </div>
 
                                         {/* Honeypot: hidden from people, bots fill it */}
@@ -398,7 +398,7 @@ export default function ContactPage() {
                                         </div>
 
                                         {error && (
-                                            <p role="alert" className="border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                            <p role="alert" className="border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
                                                 {error}
                                             </p>
                                         )}

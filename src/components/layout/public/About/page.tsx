@@ -495,7 +495,7 @@ export default function About() {
         <section
             ref={rootRef}
             id="about"
-            className="relative overflow-hidden bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] text-white"
+            className="relative overflow-hidden text-white"
         >
             <GridLines />
 

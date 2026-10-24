@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useAuth } from "@/context/AuthContext";
 import { api } from "@/lib/api";
+import GridLines from "@/components/shared/GridLines/GridLines";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -179,13 +180,9 @@ export default function ContactPage() {
 
     return (
         <main ref={rootRef} className="relative min-h-screen text-white">
+            <GridLines/>
             <div className="relative mx-auto max-w-6xl px-4">
                 {/* Vertical column lines */}
-                <div aria-hidden className="pointer-events-none absolute inset-y-0 left-4 right-4 hidden grid-cols-5 lg:grid">
-                    {[0, 1, 2, 3, 4].map((i) => (
-                        <div key={i} className={`border-l border-white/[0.07] ${i === 4 ? "border-r" : ""}`} />
-                    ))}
-                </div>
 
                 <div className="relative z-10">
                     {/* ───────── Hero ───────── */}

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
+import GridLines from "@/components/shared/GridLines/GridLines";
 
 type Category = "general" | "volunteers" | "organizers";
 
@@ -205,13 +206,14 @@ export default function FaqPage() {
 
     return (
         <main ref={rootRef} className="relative min-h-screen text-white">
+             <GridLines/>
             <div className="relative mx-auto max-w-6xl px-4">
                 {/* Vertical column lines */}
-                <div aria-hidden className="pointer-events-none absolute inset-y-0 left-4 right-4 hidden grid-cols-5 lg:grid">
+                {/* <div aria-hidden className="pointer-events-none absolute inset-y-0 left-4 right-4 hidden grid-cols-5 lg:grid">
                     {[0, 1, 2, 3, 4].map((i) => (
                         <div key={i} className={`border-l border-white/[0.07] ${i === 4 ? "border-r" : ""}`} />
                     ))}
-                </div>
+                </div> */}
 
                 <div className="relative z-10">
                     {/* ───────── Hero ───────── */}

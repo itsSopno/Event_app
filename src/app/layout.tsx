@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "../components/layout/public/Navbar/navbar";
 import Footer from "../components/layout/public/Footer/footer";
 import { AuthProvider } from "@/context/AuthContext";
+import LenisProvider from "@/components/providers/LenisProvider";
 
 const display = Fraunces({ subsets: ["latin"], variable: "--font-display" });
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -26,11 +27,13 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${display.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)]">
-        <AuthProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </AuthProvider>
+        <LenisProvider>
+          <AuthProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </AuthProvider>
+        </LenisProvider>
       </body>
     </html>
   );

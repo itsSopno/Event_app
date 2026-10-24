@@ -70,6 +70,7 @@ export default function EventDetailPage() {
     const [loading, setLoading] = useState(true);
     const [regLoading, setRegLoading] = useState(false);
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+    const [selectedSkill, setSelectedSkill] = useState("");
 
     useEffect(() => {
         const fetchEvent = async () => {
@@ -106,10 +107,17 @@ export default function EventDetailPage() {
 
     const handleRegister = async () => {
         if (!user) { router.push("/login"); return; }
+        // If event has required skills, user must select one
+        if (event?.requiredSkills?.length && !selectedSkill) {
+            setMessage({ type: "error", text: "Please select a skill before registering." });
+            return;
+        }
         setRegLoading(true);
         setMessage(null);
         try {
-            await api.post(`/api/registrations/events/${id}/register`, {});
+            await api.post(`/api/registrations/events/${id}/register`, {
+                selectedSkill: selectedSkill || "General",
+            });
             setMessage({ type: "success", text: "Successfully registered! Check My Events to view your status." });
             setRegistration({ _id: "temp", status: "registered" });
             setEvent((prev) => prev ? { ...prev, registeredCount: (prev.registeredCount || 0) + 1 } : prev);
@@ -329,14 +337,34 @@ export default function EventDetailPage() {
                                         Log in to register <ArrowUpRight className="h-3.5 w-3.5" />
                                     </button>
                                 ) : (
-                                    <button
-                                        onClick={handleRegister}
-                                        disabled={regLoading}
-                                        className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-[#6c7686] py-3 font-mono text-xs font-medium text-black transition-colors hover:bg-white disabled:opacity-60"
-                                    >
-                                        {regLoading ? "Registering…" : "Register as volunteer"}
-                                        {!regLoading && <ArrowUpRight className="h-3.5 w-3.5" />}
-                                    </button>
+                                    <div className="space-y-3">
+                                        {/* Skill selector */}
+                                        {event.requiredSkills?.length > 0 && (
+                                            <div>
+                                                <label className="mb-1.5 block font-mono text-xs text-white/50">
+                                                    select your skill *
+                                                </label>
+                                                <select
+                                                    value={selectedSkill}
+                                                    onChange={(e) => setSelectedSkill(e.target.value)}
+                                                    className="w-full rounded-sm border border-white/15 bg-[#071f1e] px-3 py-2.5 font-mono text-xs text-white focus:border-[#6c7686] focus:outline-none"
+                                                >
+                                                    <option value="">-- pick a skill --</option>
+                                                    {event.requiredSkills.map((s) => (
+                                                        <option key={s} value={s}>{s}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
+                                        <button
+                                            onClick={handleRegister}
+                                            disabled={regLoading}
+                                            className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-[#6c7686] py-3 font-mono text-xs font-medium text-black transition-colors hover:bg-white disabled:opacity-60"
+                                        >
+                                            {regLoading ? "Registering…" : "Register as volunteer"}
+                                            {!regLoading && <ArrowUpRight className="h-3.5 w-3.5" />}
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         </div>

@@ -682,7 +682,7 @@ export default function About() {
                             I focus on building a space where people learn, compete and have fun. By
                             mixing coding with community, we help every member grow from day one.
                         </p>
-                        <p className="ab-quote mt-8 font-serif text-3xl italic text-white/40">Sinners_Coding</p>
+                        <p className="ab-quote mt-8 font-serif text-3xl italic text-white/40">Studio Sinners</p>
                     </div>
                 </div>
             </div>

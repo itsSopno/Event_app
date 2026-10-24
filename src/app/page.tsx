@@ -12,8 +12,8 @@ export default function Home() {
     <div className="bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] flex flex-col flex-1 font-sans">
       <Hero />
       <Eventpage/>
-      <FaqPage/>
       <About />
+      <FaqPage/>
       <ContactPage/>
       <GridLines/>
       {/* <Breathing/>

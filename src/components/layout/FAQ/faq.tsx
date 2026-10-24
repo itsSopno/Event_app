@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
-import GridLines from "@/components/shared/GridLines/GridLines";
 
 type Category = "general" | "volunteers" | "organizers";
 
@@ -98,6 +97,23 @@ const FAQS: FaqItem[] = [
     },
 ];
 
+/* Dark button with an outlined arrow box, same as the other pages */
+function ArrowButtonInner({ children }: { children: React.ReactNode }) {
+    return (
+        <>
+            <span className="text-[15px] font-medium">{children}</span>
+            <span className="flex h-10 w-10 items-center justify-center border border-white">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+            </span>
+        </>
+    );
+}
+
+const btnCls =
+    "inline-flex h-12 items-center justify-between gap-10 bg-[#041414] pl-4 pr-1 text-white transition hover:bg-black";
+
 export default function FaqPage() {
     const rootRef = useRef<HTMLElement>(null);
     const listRef = useRef<HTMLDivElement>(null);
@@ -108,6 +124,7 @@ export default function FaqPage() {
     const [openId, setOpenId] = useState<string | null>("g1");
 
     const items = FAQS.filter((f) => f.category === category);
+    const activeLabel = CATEGORIES.find((c) => c.key === category)?.label;
 
     // Respect reduced motion: animations finish instantly
     const d = (seconds: number) =>
@@ -119,19 +136,11 @@ export default function FaqPage() {
     // 1. Page load: one orchestrated entrance
     useEffect(() => {
         const ctx = gsap.context(() => {
-            const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-            tl.from(".faq-title-line", {
-                yPercent: 110,
-                duration: d(0.9),
-                stagger: 0.12,
-            })
-                .from(".faq-intro", { opacity: 0, y: 16, duration: d(0.6) }, "-=0.5")
-                .from(
-                    ".faq-cat",
-                    { opacity: 0, x: -16, duration: d(0.5), stagger: 0.08 },
-                    "-=0.4"
-                )
-                .from(".faq-help", { opacity: 0, y: 16, duration: d(0.6) }, "-=0.3");
+            gsap
+                .timeline({ defaults: { ease: "power3.out" } })
+                .from(".faq-word", { yPercent: 115, duration: d(1), stagger: 0.07 })
+                .from(".faq-fade", { opacity: 0, y: 20, duration: d(0.7), stagger: 0.12 }, "-=0.6")
+                .from(".faq-cat", { opacity: 0, x: -16, duration: d(0.5), stagger: 0.08 }, "-=0.5");
         }, rootRef);
         return () => ctx.revert();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,14 +151,14 @@ export default function FaqPage() {
         const ctx = gsap.context(() => {
             gsap.fromTo(
                 ".faq-item",
-                { opacity: 0, y: 18 },
+                { opacity: 0, y: 24 },
                 {
                     opacity: 1,
                     y: 0,
-                    duration: d(0.5),
-                    stagger: 0.07,
-                    ease: "power2.out",
-                    delay: 0.15,
+                    duration: d(0.6),
+                    stagger: 0.08,
+                    ease: "power3.out",
+                    delay: 0.2,
                     clearProps: "transform",
                 }
             );
@@ -167,20 +176,20 @@ export default function FaqPage() {
             if (panel) {
                 gsap.to(panel, {
                     height: isOpen ? "auto" : 0,
-                    duration: d(isOpen ? 0.45 : 0.3),
-                    ease: isOpen ? "power2.out" : "power2.inOut",
+                    duration: d(isOpen ? 0.5 : 0.35),
+                    ease: isOpen ? "power3.out" : "power2.inOut",
                 });
                 gsap.to(panel.firstElementChild, {
                     opacity: isOpen ? 1 : 0,
-                    y: isOpen ? 0 : -6,
-                    duration: d(0.35),
-                    delay: isOpen ? 0.1 : 0,
+                    y: isOpen ? 0 : -8,
+                    duration: d(0.4),
+                    delay: isOpen ? 0.12 : 0,
                 });
             }
             if (icon) {
                 gsap.to(icon, {
                     rotate: isOpen ? 45 : 0,
-                    duration: d(0.3),
+                    duration: d(0.35),
                     ease: "power2.out",
                 });
             }
@@ -195,119 +204,155 @@ export default function FaqPage() {
     };
 
     return (
-        <main
-            ref={rootRef}
-            className="relative min-h-screen bg-[#051817] bg-[image:radial-gradient(ellipse_at_80%_0%,#0a2a28_0%,transparent_60%)] text-white"
-        >
-            <GridLines />
+        <main ref={rootRef} className="relative min-h-screen bg-white text-[#041414]">
+            <div className="relative mx-auto max-w-6xl px-4">
+                {/* Vertical column lines */}
+                <div aria-hidden className="pointer-events-none absolute inset-y-0 left-4 right-4 hidden grid-cols-5 lg:grid">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                        <div key={i} className={`border-l border-[#041414]/[0.07] ${i === 4 ? "border-r" : ""}`} />
+                    ))}
+                </div>
 
-            <div className="relative z-10 max-w-6xl mx-auto px-4 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
-                {/* ───────── Left: intro + categories ───────── */}
-                <aside className="lg:col-span-2 lg:sticky lg:top-24 self-start">
-                    <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1]">
-                        <span className="block overflow-hidden pb-1">
-                            <span className="faq-title-line block">Questions,</span>
-                        </span>
-                        <span className="block overflow-hidden pb-1">
-                            <span className="faq-title-line block text-[#4eca8b]">answered.</span>
-                        </span>
-                    </h1>
+                <div className="relative z-10">
+                    {/* ───────── Hero ───────── */}
+                    <div className="grid gap-8 pb-16 pt-16 md:pt-24 lg:grid-cols-5 lg:gap-0">
+                        <p className="faq-fade text-lg font-medium lg:pl-4">
+                            <span className="italic">//</span> FAQ
+                        </p>
 
-                    <p className="faq-intro mt-5 text-gray-400 text-[15px] leading-relaxed max-w-sm">
-                        Everything about joining events, applying as a volunteer and running your own.
-                    </p>
+                        <div className="lg:col-span-4 lg:pr-4">
+                            <h1 className="max-w-3xl text-5xl font-bold leading-[0.98] tracking-tighter md:text-7xl">
+                                {["Questions,", "answered."].map((line) => (
+                                    <span key={line} className="-mb-[0.1em] block overflow-hidden pb-[0.1em]">
+                                        <span className="mr-[0.25em] inline-block overflow-hidden align-bottom">
+                                            <span className="faq-word inline-block">{line}</span>
+                                        </span>
+                                    </span>
+                                ))}
+                            </h1>
 
-                    <nav aria-label="FAQ categories" className="mt-8 flex lg:flex-col gap-2 flex-wrap">
-                        {CATEGORIES.map((c) => {
-                            const active = c.key === category;
-                            const count = FAQS.filter((f) => f.category === c.key).length;
-                            return (
-                                <button
-                                    key={c.key}
-                                    onClick={() => switchCategory(c.key)}
-                                    aria-pressed={active}
-                                    className={`faq-cat flex items-center justify-between gap-6 px-4 py-2.5 rounded-xl border text-sm transition ${
-                                        active
-                                            ? "bg-[#4eca8b] border-[#4eca8b] text-[#051817] font-semibold"
-                                            : "border-[#0d3330] text-gray-300 hover:border-[#4eca8b]/60"
-                                    }`}
-                                >
-                                    <span>{c.label}</span>
-                                    <span className={active ? "text-[#051817]/70" : "text-gray-500"}>{count}</span>
-                                </button>
-                            );
-                        })}
-                    </nav>
+                            <div className="mt-8 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+                                <p className="faq-fade max-w-md text-lg leading-snug text-[#041414]/70">
+                                    Everything about joining events, applying as a volunteer and
+                                    running your own.
+                                </p>
+                                <Link href="/contact" className={`faq-fade ${btnCls} self-start md:self-auto`}>
+                                    <ArrowButtonInner>Contact us</ArrowButtonInner>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
 
-                    <div className="faq-help mt-10 rounded-2xl border border-[#0d3330] bg-[#071f1e] p-5">
-                        <p className="font-semibold text-sm">Can&apos;t find your answer?</p>
-                        <p className="text-gray-400 text-sm mt-1">Send us a message and we will reply by email.</p>
-                        <Link
-                            href="/contact"
-                            className="inline-block mt-4 px-5 py-2 rounded-xl bg-[#4eca8b] text-[#051817] text-sm font-semibold hover:bg-[#3db87a] transition"
+                    {/* ───────── Categories + accordion ───────── */}
+                    <div className="grid gap-10 border-t border-[#041414]/10 pb-24 pt-14 lg:grid-cols-5 lg:gap-0">
+                        {/* Category tabs */}
+                        <nav
+                            aria-label="FAQ categories"
+                            className="flex flex-wrap gap-2 self-start lg:sticky lg:top-24 lg:flex-col lg:pl-4 lg:pr-6"
                         >
-                            Contact us
-                        </Link>
-                    </div>
-                </aside>
-
-                {/* ───────── Right: accordion ───────── */}
-                <section className="lg:col-span-3">
-                    <div ref={listRef} className="border-t border-[#0d3330]">
-                        {items.map((item) => {
-                            const isOpen = item.id === openId;
-                            return (
-                                <div
-                                    key={item.id}
-                                    className={`faq-item border-b border-[#0d3330] transition-colors ${
-                                        isOpen ? "bg-[#071f1e]/70" : ""
-                                    }`}
-                                >
-                                    <h2>
-                                        <button
-                                            onClick={() => setOpenId(isOpen ? null : item.id)}
-                                            aria-expanded={isOpen}
-                                            aria-controls={`panel-${item.id}`}
-                                            id={`trigger-${item.id}`}
-                                            className="w-full flex items-center justify-between gap-6 text-left px-3 sm:px-5 py-5 group"
-                                        >
-                                            <span
-                                                className={`text-base sm:text-lg font-medium transition-colors ${
-                                                    isOpen ? "text-[#4eca8b]" : "text-white group-hover:text-[#4eca8b]"
-                                                }`}
-                                            >
-                                                {item.q}
-                                            </span>
-                                            <span
-                                                ref={(el) => {
-                                                    icons.current[item.id] = el;
-                                                }}
-                                                aria-hidden
-                                                className="shrink-0 w-8 h-8 rounded-full border border-[#0d3330] flex items-center justify-center text-[#4eca8b] text-xl leading-none"
-                                            >
-                                                +
-                                            </span>
-                                        </button>
-                                    </h2>
-
-                                    <div
-                                        id={`panel-${item.id}`}
-                                        role="region"
-                                        aria-labelledby={`trigger-${item.id}`}
-                                        ref={(el) => {
-                                            panels.current[item.id] = el;
-                                        }}
-                                        className="h-0 overflow-hidden"
+                            {CATEGORIES.map((c) => {
+                                const active = c.key === category;
+                                const count = FAQS.filter((f) => f.category === c.key).length;
+                                return (
+                                    <button
+                                        key={c.key}
+                                        onClick={() => switchCategory(c.key)}
+                                        aria-pressed={active}
+                                        className={`faq-cat flex items-center justify-between gap-4 border px-4 py-2.5 text-left text-sm transition ${
+                                            active
+                                                ? "border-[#041414] bg-[#041414] text-white"
+                                                : "border-[#041414]/20 text-[#041414]/80 hover:border-[#041414]"
+                                        }`}
                                     >
-                                        <p className="px-3 sm:px-5 pb-6 pr-12 sm:pr-16 text-gray-400 text-[15px] leading-relaxed max-w-prose">
-                                            {item.a}
-                                        </p>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                        <span>{c.label}</span>
+                                        <span
+                                            className={`flex h-5 min-w-5 items-center justify-center px-1 text-xs ${
+                                                active ? "bg-[#dfee3b] text-[#041414]" : "bg-[#041414]/[0.06] text-[#041414]/60"
+                                            }`}
+                                        >
+                                            {count}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </nav>
+
+                        {/* Accordion */}
+                        <section className="lg:col-span-4 lg:pr-4">
+                            <p className="mb-6 text-lg font-medium">
+                                <span className="italic">//</span> {activeLabel}
+                            </p>
+
+                            <div ref={listRef} className="border-t border-[#041414]/10">
+                                {items.map((item) => {
+                                    const isOpen = item.id === openId;
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className={`faq-item border-b border-l-4 border-b-[#041414]/10 transition-colors duration-300 ${
+                                                isOpen
+                                                    ? "border-l-[#dfee3b] bg-[#dfee3b]/10"
+                                                    : "border-l-transparent"
+                                            }`}
+                                        >
+                                            <h2>
+                                                <button
+                                                    onClick={() => setOpenId(isOpen ? null : item.id)}
+                                                    aria-expanded={isOpen}
+                                                    aria-controls={`panel-${item.id}`}
+                                                    id={`trigger-${item.id}`}
+                                                    className="group flex w-full items-center justify-between gap-6 px-4 py-6 text-left sm:px-6"
+                                                >
+                                                    <span className="text-xl font-semibold tracking-tight sm:text-2xl md:text-3xl">
+                                                        {item.q}
+                                                    </span>
+                                                    <span
+                                                        ref={(el) => {
+                                                            icons.current[item.id] = el;
+                                                        }}
+                                                        aria-hidden
+                                                        className={`flex h-10 w-10 shrink-0 items-center justify-center border text-2xl font-light leading-none transition-colors duration-300 ${
+                                                            isOpen
+                                                                ? "border-[#041414] bg-[#041414] text-[#dfee3b]"
+                                                                : "border-[#041414]/25 text-[#041414] group-hover:border-[#041414] group-hover:bg-[#dfee3b]"
+                                                        }`}
+                                                    >
+                                                        +
+                                                    </span>
+                                                </button>
+                                            </h2>
+
+                                            <div
+                                                id={`panel-${item.id}`}
+                                                role="region"
+                                                aria-labelledby={`trigger-${item.id}`}
+                                                ref={(el) => {
+                                                    panels.current[item.id] = el;
+                                                }}
+                                                className="h-0 overflow-hidden"
+                                            >
+                                                <p className="max-w-2xl px-4 pb-7 pr-16 text-[17px] leading-relaxed text-[#041414]/75 sm:px-6 sm:pr-20">
+                                                    {item.a}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <p className="mt-10 text-[15px] text-[#041414]/60">
+                                Still stuck?{" "}
+                                <Link
+                                    href="/contact"
+                                    className="font-medium text-[#041414] underline decoration-[#dfee3b] decoration-2 underline-offset-4"
+                                >
+                                    Send us a message
+                                </Link>{" "}
+                                and we will reply by email.
+                            </p>
+                        </section>
                     </div>
-                </section>
+                </div>
             </div>
         </main>
     );

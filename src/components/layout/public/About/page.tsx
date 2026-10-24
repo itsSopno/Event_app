@@ -126,7 +126,7 @@ export default function About() {
 
                 <div className="pb-24 text-center">
                     <Link
-                        href="/register"
+                        href="/signup"
                         className="rounded-md bg-white px-6 py-3 font-mono text-xs uppercase tracking-widest text-black hover:bg-white/80"
                     >
                         Join the community

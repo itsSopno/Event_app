@@ -6,6 +6,7 @@ import Pomodoro from '../components/layout/public/forBreak/Promodor/page (3)'
 import GridLines from "@/components/shared/GridLines/GridLines";
 import Eventpage from '../components/layout/public/Upcoming/event'
 import FaqPage from "@/components/layout/FAQ/faq";
+import ContactPage from "@/components/layout/public/Contact/contact";
 export default function Home() {
   return (
     <div className="bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] flex flex-col flex-1 font-sans">
@@ -13,6 +14,7 @@ export default function Home() {
       <Eventpage/>
       <FaqPage/>
       <About />
+      <ContactPage/>
       <GridLines/>
       <Breathing/>
       <Eyerule/>

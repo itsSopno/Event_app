@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "../components/layout/public/Navbar/navbar";
 import Footer from "../components/layout/public/Footer/footer";
 import { AuthProvider } from "@/context/AuthContext";
-import NotFound from "@/components/Error/error";
 
 const display = Fraunces({ subsets: ["latin"], variable: "--font-display" });
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -28,7 +27,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#051817]">
         <AuthProvider>
-          <NotFound/>
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />

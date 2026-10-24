@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import './about.css'
 import GridLines from '../../../../components/shared/GridLines/GridLines'
+import { useAuth } from '@/context/AuthContext'
 const STATS = [
     { id: '01', value: '83+', label: 'Events hosted', featured: true },
     { id: '02', value: '88+', label: 'Active members' },
@@ -21,6 +24,7 @@ const FEATURES = [
 ]
 
 export default function About() {
+    const { user } = useAuth();
     return (
         <section id="about" className="relative overflow-hidden bg-[#051817] bg-[image:radial-gradient(ellipse_at_75%_30%,#0a2a28_0%,transparent_60%)] text-white">
             <GridLines />
@@ -125,12 +129,21 @@ export default function About() {
                 </div>
 
                 <div className="pb-24 text-center">
-                    <Link
-                        href="/signup"
-                        className="rounded-md bg-white px-6 py-3 font-mono text-xs uppercase tracking-widest text-black hover:bg-white/80"
-                    >
-                        Join the community
-                    </Link>
+                    {user ? (
+                        <Link
+                            href="/dashboard"
+                            className="rounded-md bg-white px-6 py-3 font-mono text-xs uppercase tracking-widest text-black hover:bg-white/80"
+                        >
+                            Go to dashboard
+                        </Link>
+                    ) : (
+                        <Link
+                            href="/singup"
+                            className="rounded-md bg-white px-6 py-3 font-mono text-xs uppercase tracking-widest text-black hover:bg-white/80"
+                        >
+                            Join the community
+                        </Link>
+                    )}
                 </div>
             </div>
         </section>
